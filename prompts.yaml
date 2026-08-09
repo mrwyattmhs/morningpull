@@ -20,7 +20,7 @@ timezone: "America/New_York"
 # Which Claude model answers each prompt. See current names at
 # docs.claude.com/en/docs/about-claude/models — override here if needed.
 # (Can also be set with the CLAUDE_MODEL environment variable.)
-model: "claude-sonnet-5"
+model: "claude-haiku-4-5-20251001"
 
 # How many web searches Claude may run per prompt. Higher = more thorough
 # but slower and slightly more expensive. 3–5 is a good range.
