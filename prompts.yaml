@@ -1,0 +1,59 @@
+# ============================================================
+#  YOUR DISPATCH — edit this file to change your morning page
+# ============================================================
+#
+#  To ADD a section:    copy a "- title / prompt" block below and edit it.
+#  To REMOVE a section:  delete its block.
+#  To REORDER:           move blocks up or down. Order here = order on the page.
+#
+#  Nothing else needs editing to change your news. Save the file,
+#  push to GitHub, and the next morning's page reflects the change.
+# ------------------------------------------------------------
+
+title: "The Morning Pull"
+subtitle: "A daily dispatch, assembled overnight."
+
+# Your timezone (used for the dateline). Find yours in the "TZ identifier"
+# column at en.wikipedia.org/wiki/List_of_tz_database_time_zones
+timezone: "America/New_York"
+
+# Which Claude model answers each prompt. See current names at
+# docs.claude.com/en/docs/about-claude/models — override here if needed.
+# (Can also be set with the CLAUDE_MODEL environment variable.)
+model: "claude-sonnet-5"
+
+# How many web searches Claude may run per prompt. Higher = more thorough
+# but slower and slightly more expensive. 3–5 is a good range.
+max_searches_per_prompt: 5
+
+# ------------------------------------------------------------
+#  SECTIONS — this is your list. Add and remove freely.
+# ------------------------------------------------------------
+sections:
+
+  - title: "GM & Cadillac performance"
+    prompt: >
+      What's the most important news from the past week in the Cadillac V-Series
+      and GM performance world — new models, updates, pricing, or recalls? Focus
+      on genuinely new developments, skip rehashed older stories, and give me two
+      or three items, each a couple of sentences.
+
+  - title: "Next-gen Camaro watch"
+    prompt: >
+      What is the latest reporting on the rumored next-generation Chevrolet Camaro
+      (the possible four-door, Alpha 2 platform, V8 sedan)? Tell me only what's
+      new since the last few weeks. Be explicit about what is confirmed by GM
+      versus what is still unconfirmed rumor or a single-source report.
+
+  - title: "Enthusiast car market"
+    prompt: >
+      Any notable news this week on the used enthusiast car market — sports sedans
+      and coupes in the roughly $50k–80k range (BMW M2/M3/M4, Porsche 718, Shelby
+      GT350, etc.)? Prices moving, models appreciating, that sort of thing. Keep
+      it to the two or three most useful items.
+
+  # --- copy the block below to start a new section ---
+  # - title: "Your section name"
+  #   prompt: >
+  #     Your prompt here. Ask for a specific number of items and a short length,
+  #     and tell it to skip old news — you'll get cleaner results.

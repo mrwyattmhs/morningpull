@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Morning Pull</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Spectral:ital,wght@0,400;0,600;1,400&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --paper:   #f3f4f1;
+    --ink:     #1a2230;
+    --muted:   #5c6672;
+    --accent:  #b23a2e;
+    --hair:    #d8dad4;
+  }
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: "Inter", system-ui, sans-serif;
+    line-height: 1.6;
+  }
+  .wrap { max-width: 720px; margin: 0 auto; padding: 0 24px 96px; }
+
+  /* Masthead */
+  header.mast { padding: 56px 0 20px; border-bottom: 2px solid var(--ink); }
+  .mast .kicker {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase;
+    color: var(--accent); margin: 0 0 14px;
+  }
+  .mast h1 {
+    font-family: "Spectral", Georgia, serif;
+    font-weight: 600; font-size: clamp(38px, 8vw, 60px);
+    line-height: 1.02; letter-spacing: -0.01em; margin: 0;
+  }
+  .mast .subtitle {
+    font-family: "Spectral", Georgia, serif; font-style: italic;
+    color: var(--muted); font-size: 18px; margin: 12px 0 0;
+  }
+
+  /* Sections */
+  .entry { padding: 40px 0; border-bottom: 1px solid var(--hair); }
+  .entry-head { display: flex; align-items: baseline; gap: 14px; margin-bottom: 14px; }
+  .entry-num {
+    font-family: "JetBrains Mono", monospace; font-size: 13px;
+    color: var(--accent); padding-top: 4px;
+  }
+  .entry-title {
+    font-family: "Spectral", Georgia, serif; font-weight: 600;
+    font-size: 26px; letter-spacing: -0.01em; margin: 0;
+  }
+  .entry-body { font-size: 17px; }
+  .entry-body p { margin: 0 0 14px; }
+  .entry-body ul { margin: 0 0 14px; padding-left: 20px; }
+  .entry-body li { margin: 0 0 8px; }
+  .entry-body a { color: var(--ink); text-decoration: underline; text-decoration-color: var(--accent); text-underline-offset: 2px; }
+
+  /* Sources */
+  .sources { margin-top: 18px; padding-top: 14px; border-top: 1px dotted var(--hair); }
+  .sources-label {
+    font-family: "JetBrains Mono", monospace; font-size: 11px;
+    letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted);
+  }
+  .sources ul { list-style: none; margin: 8px 0 0; padding: 0; }
+  .sources li { margin: 0 0 4px; }
+  .sources a { color: var(--muted); font-size: 14px; text-decoration: none; }
+  .sources a:hover { color: var(--accent); }
+
+  footer { margin-top: 40px; font-family: "JetBrains Mono", monospace; font-size: 12px; color: var(--muted); }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .entry { animation: rise 0.5s ease both; }
+    @keyframes rise { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+  }
+  a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <header class="mast">
+      <p class="kicker">SUNDAY, AUGUST 9, 2026</p>
+      <h1>The Morning Pull</h1>
+      <p class="subtitle">A daily dispatch, assembled overnight.</p>
+    </header>
+    <main>
+      
+    <section class="entry">
+      <div class="entry-head">
+        <span class="entry-num">01</span>
+        <h2 class="entry-title">GM &amp; Cadillac performance</h2>
+      </div>
+      <div class="entry-body"><p>GM confirmed a new <strong>V-Series</strong> update this week.</p>
+<ul>
+<li>Item one, a real development.</li>
+<li>Item two, reported by a single source (unconfirmed).</li>
+</ul></div>
+      <div class="sources"><span class="sources-label">Sources</span><ul><li><a href="https://example.com/a">Example Auto News — GM V-Series update</a></li>
+<li><a href="https://example.com/b">GM Authority report</a></li></ul></div>
+    </section>
+    
+
+    <section class="entry">
+      <div class="entry-head">
+        <span class="entry-num">02</span>
+        <h2 class="entry-title">Next-gen Camaro watch</h2>
+      </div>
+      <div class="entry-body"><p>GM confirmed a new <strong>V-Series</strong> update this week.</p>
+<ul>
+<li>Item one, a real development.</li>
+<li>Item two, reported by a single source (unconfirmed).</li>
+</ul></div>
+      <div class="sources"><span class="sources-label">Sources</span><ul><li><a href="https://example.com/a">Example Auto News — GM V-Series update</a></li>
+<li><a href="https://example.com/b">GM Authority report</a></li></ul></div>
+    </section>
+    
+
+    <section class="entry">
+      <div class="entry-head">
+        <span class="entry-num">03</span>
+        <h2 class="entry-title">Enthusiast car market</h2>
+      </div>
+      <div class="entry-body"><p>GM confirmed a new <strong>V-Series</strong> update this week.</p>
+<ul>
+<li>Item one, a real development.</li>
+<li>Item two, reported by a single source (unconfirmed).</li>
+</ul></div>
+      <div class="sources"><span class="sources-label">Sources</span><ul><li><a href="https://example.com/a">Example Auto News — GM V-Series update</a></li>
+<li><a href="https://example.com/b">GM Authority report</a></li></ul></div>
+    </section>
+    
+    </main>
+    <footer>Assembled SUNDAY, AUGUST 9, 2026 · regenerated daily</footer>
+  </div>
+</body>
+</html>
