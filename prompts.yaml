@@ -38,19 +38,18 @@ sections:
       on genuinely new developments, skip rehashed older stories, and give me two
       or three items, each a couple of sentences.
 
-  - title: "Next-gen Camaro watch"
+  - title: "Next-gen Camaro / Mustang watch"
     prompt: >
-      What is the latest reporting on the rumored next-generation Chevrolet Camaro
+      What is the latest reporting on the rumored next-generation Chevrolet Camaro or Ford Mustang
       (the possible four-door, Alpha 2 platform, V8 sedan)? Tell me only what's
       new since the last few weeks. Be explicit about what is confirmed by GM
       versus what is still unconfirmed rumor or a single-source report.
 
-  - title: "Enthusiast car market"
+  - title: "AI and education"
     prompt: >
-      Any notable news this week on the used enthusiast car market — sports sedans
-      and coupes in the roughly $50k–80k range (BMW M2/M3/M4, Porsche 718, Shelby
-      GT350, etc.)? Prices moving, models appreciating, that sort of thing. Keep
-      it to the two or three most useful items.
+      What are the latest reporting on how AI is being used in math education. Tell me 
+      only what's new since the last few weeks. Look for new products or districts 
+      that are changing their usage policies. 
 
   # --- copy the block below to start a new section ---
   # - title: "Your section name"
