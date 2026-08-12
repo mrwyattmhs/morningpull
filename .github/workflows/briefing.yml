@@ -1,10 +1,10 @@
 name: Morning dispatch
 
 on:
-  schedule:
-    # 11:00 UTC = 7:00 AM Eastern (EDT) / 6:00 AM (EST).
-    # Adjust the hour for your timezone. Format: "minute hour * * *" (UTC).
-    - cron: "0 11 * * *"
+   schedule:
+    # 10:01 UTC = 6:01 AM Eastern (EDT) / 5:01 AM (EST).
+    - cron: "1 10 * * *"
+    
   workflow_dispatch:   # lets you run it by hand from the Actions tab
 
 # Permissions needed to publish to GitHub Pages
