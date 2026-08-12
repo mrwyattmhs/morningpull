@@ -24,7 +24,7 @@ model: "claude-haiku-4-5-20251001"
 
 # How many web searches Claude may run per prompt. Higher = more thorough
 # but slower and slightly more expensive. 3–5 is a good range.
-max_searches_per_prompt: 5
+max_searches_per_prompt: 3
 
 # ------------------------------------------------------------
 #  SECTIONS — this is your list. Add and remove freely.
@@ -39,13 +39,11 @@ sections:
       or three items, each a couple of sentences. Do not say things like "let me search this up" 
       or tell me what you're doing, keep the information short and simple.
 
-  - title: "Next-gen Camaro / Mustang watch"
+  - title: "Formula 1 News"
     prompt: >
-      What is the latest reporting on the rumored next-generation Chevrolet Camaro or Ford Mustang
-      (the possible four-door, Alpha 2 platform, V8 sedan)? Tell me only what's
-      new since the last few weeks. Be explicit about what is confirmed by GM
-      versus what is still unconfirmed rumor or a single-source report. Do not say things 
-      like "let me search this up" or tell me what you're doing, keep the information short and simple.
+      What is the latest news about Formula 1? What are the current standings for
+      the constructor's and driver's championship. Is there any news on drivers changing this year or next?
+      Do not say things like "let me search this up" or tell me what you're doing, keep the information short and simple.
 
   - title: "AI and education"
     prompt: >
