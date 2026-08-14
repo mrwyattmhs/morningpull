@@ -33,6 +33,141 @@ def load_config(path="prompts.yaml"):
 
 
 # ----------------------------------------------------------------------
+# Archive helpers
+#
+# Every run writes a dated copy of the page into archive/YYYY-MM-DD.html.
+# Those files are committed back to the repo by the workflow, which is what
+# gives the site a memory — otherwise each morning's build would start from
+# an empty folder and there'd be nothing to look back at.
+# ----------------------------------------------------------------------
+ARCHIVE_DIR = "archive"
+
+
+def archive_dates():
+    """Every archived date, newest first, as YYYY-MM-DD strings."""
+    if not os.path.isdir(ARCHIVE_DIR):
+        return []
+    dates = []
+    for name in os.listdir(ARCHIVE_DIR):
+        if not name.endswith(".html"):
+            continue
+        stem = name[:-5]
+        try:
+            datetime.strptime(stem, "%Y-%m-%d")
+        except ValueError:
+            continue  # ignore anything that isn't a dated page
+        dates.append(stem)
+    return sorted(dates, reverse=True)
+
+
+def pretty_date(iso, style="long"):
+    d = datetime.strptime(iso, "%Y-%m-%d")
+    if style == "long":
+        return d.strftime("%A, %B %-d, %Y")
+    if style == "month":
+        return d.strftime("%B %Y")
+    return d.strftime("%a %b %-d")
+
+
+def render_archive_nav(dates, today_iso, base=""):
+    """
+    The dropdown in the top right: the past week, plus a link to the full index.
+
+    `base` is the path prefix back to the site root ("" for pages at the root,
+    "../" for pages inside archive/), so the same markup works from both.
+    """
+    recent = [d for d in dates if d != today_iso][:7]
+
+    items = [
+        f'<a class="arch-item is-current" href="{base}index.html">'
+        f'<span class="arch-when">Today</span>'
+        f'<span class="arch-date">{html.escape(pretty_date(today_iso, "short"))}</span></a>'
+    ]
+    for d in recent:
+        items.append(
+            f'<a class="arch-item" href="{base}{ARCHIVE_DIR}/{d}.html">'
+            f'<span class="arch-when">{html.escape(pretty_date(d, "short"))}</span>'
+            f'<span class="arch-date">{html.escape(d)}</span></a>'
+        )
+
+    if len(items) == 1:
+        items.append('<span class="arch-empty">Earlier pulls appear here from tomorrow.</span>')
+
+    links = "\n".join(items)
+    return f"""
+    <details class="archive-nav">
+      <summary aria-label="Browse previous pulls"><span>Archive</span><span class="chev" aria-hidden="true">&#9662;</span></summary>
+      <div class="archive-menu">
+        <span class="arch-label">Past week</span>
+        {links}
+        <a class="arch-all" href="{base}archive.html">Previous month &amp; older &rarr;</a>
+      </div>
+    </details>
+    """
+
+
+def render_archive_index(cfg, dates):
+    """A standalone page listing every pull ever, grouped by month."""
+    title = html.escape(cfg.get("title", "The Morning Pull"))
+
+    groups = {}
+    for d in dates:
+        groups.setdefault(d[:7], []).append(d)
+
+    if dates:
+        blocks = []
+        for month in sorted(groups, reverse=True):
+            rows = "\n".join(
+                f'<li><a href="{ARCHIVE_DIR}/{d}.html">'
+                f'<span class="row-date">{html.escape(pretty_date(d))}</span>'
+                f'<span class="row-iso">{html.escape(d)}</span></a></li>'
+                for d in groups[month]
+            )
+            label = html.escape(pretty_date(month + "-01", "month"))
+            count = len(groups[month])
+            blocks.append(
+                f'<section class="entry"><div class="entry-head">'
+                f'<span class="entry-num">{count:02d}</span>'
+                f'<h2 class="entry-title">{label}</h2></div>'
+                f'<ul class="arch-list">{rows}</ul></section>'
+            )
+        body = "\n".join(blocks)
+    else:
+        body = ('<section class="entry"><p class="arch-empty">'
+                'No pulls archived yet. The first one lands with tomorrow\'s build.'
+                '</p></section>')
+
+    return f"""<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Archive · {title}</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Spectral:ital,wght@0,400;0,600;1,400&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+<style>{_PAGE_CSS}</style>
+</head>
+<body data-theme="editorial">
+{_THEME_RAIL}
+  <div class="wrap">
+    <header class="mast">
+      <p class="kicker">Every pull, by month</p>
+      <h1>Archive</h1>
+      <p class="subtitle"><a class="back-link" href="index.html">&larr; Back to today's pull</a></p>
+    </header>
+    <main>
+      {body}
+    </main>
+    <footer>{title} · archive</footer>
+  </div>
+<script>{_PAGE_JS}</script>
+</body>
+</html>
+"""
+
+
+# ----------------------------------------------------------------------
 # Ask Claude one prompt, with web search enabled.
 # Returns (html_body, sources) where sources is a list of {title, url}.
 # ----------------------------------------------------------------------
@@ -242,6 +377,76 @@ _PAGE_CSS = """
   }
   a:focus-visible, button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 
+  /* ---------- Archive dropdown (top right) ---------- */
+  .mast-top {
+    display: flex; align-items: flex-start; justify-content: space-between;
+    gap: 16px; margin-bottom: 14px;
+  }
+  .mast-top .kicker { margin: 0; }
+
+  .archive-nav { position: relative; flex: none; }
+  .archive-nav summary {
+    list-style: none; cursor: pointer; user-select: none;
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 6px 12px; border: 1px solid var(--hair); border-radius: 999px;
+    font-family: "JetBrains Mono", monospace; font-size: 11px;
+    letter-spacing: .12em; text-transform: uppercase; color: var(--muted);
+    transition: border-color .15s ease, color .15s ease;
+  }
+  .archive-nav summary::-webkit-details-marker { display: none; }
+  .archive-nav summary:hover { border-color: var(--accent); color: var(--ink); }
+  .archive-nav[open] summary { border-color: var(--accent); color: var(--ink); }
+  .archive-nav .chev { font-size: 9px; transition: transform .18s ease; }
+  .archive-nav[open] .chev { transform: rotate(180deg); }
+
+  .archive-menu {
+    position: absolute; top: calc(100% + 8px); right: 0; z-index: 30;
+    min-width: 248px; padding: 10px;
+    background: var(--paper); border: 1px solid var(--hair); border-radius: 12px;
+    box-shadow: 0 14px 34px rgba(0,0,0,.16);
+    display: flex; flex-direction: column;
+  }
+  .arch-label {
+    font-family: "JetBrains Mono", monospace; font-size: 10px;
+    letter-spacing: .14em; text-transform: uppercase; color: var(--muted);
+    padding: 4px 8px 8px;
+  }
+  .arch-item {
+    display: flex; align-items: baseline; justify-content: space-between; gap: 14px;
+    padding: 7px 8px; border-radius: 7px; text-decoration: none; color: var(--ink);
+  }
+  .arch-item:hover { background: var(--hair); }
+  .arch-item .arch-when { font-size: 14px; }
+  .arch-item .arch-date {
+    font-family: "JetBrains Mono", monospace; font-size: 11px; color: var(--muted);
+  }
+  .arch-item.is-current .arch-when { color: var(--accent); font-weight: 600; }
+  .arch-empty {
+    padding: 8px; font-size: 13px; color: var(--muted); line-height: 1.45;
+  }
+  .arch-all {
+    margin-top: 8px; padding: 9px 8px 4px; border-top: 1px solid var(--hair);
+    font-family: "JetBrains Mono", monospace; font-size: 11px;
+    letter-spacing: .06em; color: var(--accent); text-decoration: none;
+  }
+  .arch-all:hover { text-decoration: underline; }
+
+  /* Archive index page */
+  .arch-list { list-style: none; margin: 0; padding: 0; }
+  .arch-list li { border-bottom: 1px dotted var(--hair); }
+  .arch-list li:last-child { border-bottom: none; }
+  .arch-list a {
+    display: flex; align-items: baseline; justify-content: space-between; gap: 16px;
+    padding: 11px 2px; text-decoration: none; color: var(--ink);
+  }
+  .arch-list a:hover .row-date { color: var(--accent); }
+  .arch-list .row-date { font-family: "Spectral", Georgia, serif; font-size: 17px; }
+  .arch-list .row-iso {
+    font-family: "JetBrains Mono", monospace; font-size: 12px; color: var(--muted);
+  }
+  .back-link { color: var(--muted); text-decoration: none; font-size: 15px; }
+  .back-link:hover { color: var(--accent); }
+
   /* ---------- Responsive: rail becomes a top bar on phones ---------- */
   @media (max-width: 720px) {
     body { padding-left: 0; }
@@ -254,6 +459,8 @@ _PAGE_CSS = """
     .theme-rail .rail-label { display: none; }
     .theme-rail button { width: auto; height: 42px; flex-direction: row; gap: 8px; padding: 0 14px; }
     .theme-rail .swatch { width: 16px; height: 16px; }
+    .archive-nav { position: static; }
+    .archive-menu { right: auto; left: 0; width: 100%; min-width: 0; }
   }
 """
 
@@ -302,7 +509,7 @@ _PAGE_JS = """
 # ----------------------------------------------------------------------
 # Page shell (design lives here)
 # ----------------------------------------------------------------------
-def render_page(cfg, dateline, sections_html):
+def render_page(cfg, dateline, sections_html, archive_nav="", base=""):
     title = html.escape(cfg.get("title", "The Morning Pull"))
     subtitle = html.escape(cfg.get("subtitle", ""))
     subtitle_html = f'<p class="subtitle">{subtitle}</p>' if subtitle else ""
@@ -324,7 +531,10 @@ def render_page(cfg, dateline, sections_html):
 {rail}
   <div class="wrap">
     <header class="mast">
-      <p class="kicker">{dateline}</p>
+      <div class="mast-top">
+        <p class="kicker">{dateline}</p>
+        {archive_nav}
+      </div>
       <h1>{title}</h1>
       {subtitle_html}
     </header>
@@ -370,10 +580,40 @@ def main():
                 sources = []
         rendered.append(render_section(i, title, body, sources))
 
-    page = render_page(cfg, dateline, "\n".join(rendered))
+    sections_html = "\n".join(rendered)
+
+    # Today's dated copy goes into the archive first, so it shows up in the
+    # list alongside everything that came before it.
+    os.makedirs(ARCHIVE_DIR, exist_ok=True)
+    today_iso = datetime.now(tz).strftime("%Y-%m-%d")
+    dates = sorted(set(archive_dates()) | {today_iso}, reverse=True)
+
+    # Root page: links point straight at archive/ and archive.html.
+    page = render_page(
+        cfg, dateline, sections_html,
+        archive_nav=render_archive_nav(dates, today_iso, base=""),
+        base="",
+    )
     with open("index.html", "w", encoding="utf-8") as f:
         f.write(page)
-    print("Wrote index.html")
+
+    # Dated copy lives one folder down, so its links need to climb back out.
+    dated = render_page(
+        cfg, dateline, sections_html,
+        archive_nav=render_archive_nav(dates, today_iso, base="../"),
+        base="../",
+    )
+    dated_path = os.path.join(ARCHIVE_DIR, f"{today_iso}.html")
+    with open(dated_path, "w", encoding="utf-8") as f:
+        f.write(dated)
+
+    # The full index gets rebuilt every run, so it's always current even
+    # though the pages it lists are frozen.
+    with open("archive.html", "w", encoding="utf-8") as f:
+        f.write(render_archive_index(cfg, dates))
+
+    print(f"Wrote index.html, {dated_path}, archive.html "
+          f"({len(dates)} pull{'s' if len(dates) != 1 else ''} archived)")
 
 
 if __name__ == "__main__":
