@@ -45,13 +45,12 @@ sections:
       the constructor's and driver's championship. Is there any news on drivers changing this year or next?
       Do not say things like "let me search this up" or tell me what you're doing, keep the information short and simple.
 
-  - title: "AI and education"
+  - title: "Hobbies"
     prompt: >
-      Do not say things like "let me search this up" 
-      or tell me what you're doing, keep the information short and simple.
-      What are the latest reporting on how AI is being used in math education. Tell me 
-      only what's new since the last few weeks. Look for new products or districts 
-      that are changing their usage policies. 
+      Sort the 3 most interesting articles in the keywords: "Fender" "Gibson" "Martin" "Omega Speedmaster"
+      Do not say things like "let me search this up" or tell me what you're doing / thought process. keep the information
+      short and simple.
+      
 
   # --- copy the block below to start a new section ---
   # - title: "Your section name"
