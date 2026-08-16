@@ -27,6 +27,9 @@ jobs:
     steps:
       - name: Check out repo
         uses: actions/checkout@v4
+        with:
+          # Full history so the archive step can rebase onto the latest main.
+          fetch-depth: 0
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -41,6 +44,11 @@ jobs:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
         run: python generate.py
 
+      # A run checks out the commit that main pointed at when the run was
+      # created. If main moves on before this step (another run, or your own
+      # commit), a plain push is rejected as out of date. So: rebase onto
+      # whatever main looks like right now, then push. Retried a few times in
+      # case main moves again mid-step.
       - name: Save this pull to the archive
         run: |
           git config user.name "github-actions[bot]"
@@ -48,10 +56,19 @@ jobs:
           git add archive archive.html
           if git diff --staged --quiet; then
             echo "Nothing new to archive."
-          else
-            git commit -m "Archive pull for $(date -u +%Y-%m-%d)"
-            git push
+            exit 0
           fi
+          git commit -m "Archive pull for $(date -u +%Y-%m-%d)"
+          for attempt in 1 2 3; do
+            if git pull --rebase --autostash origin main && git push origin HEAD:main; then
+              echo "Archive pushed on attempt $attempt."
+              exit 0
+            fi
+            echo "Push attempt $attempt failed; refreshing and retrying."
+            sleep 5
+          done
+          echo "Could not push the archive after 3 attempts." >&2
+          exit 1
 
       - name: Package the page for Pages
         uses: actions/upload-pages-artifact@v3
