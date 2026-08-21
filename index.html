@@ -143,6 +143,42 @@
   }
   a:focus-visible, button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 
+  /* ---------- Wildcards: puzzle, fretboard, numbers ---------- */
+  .pz-rule, .wc-lead { font-size: 16px; margin: 0 0 16px; }
+  .pz-svg { display: block; width: 100%; max-width: 340px; margin: 0 0 6px; height: auto; }
+  .pz-num {
+    font-family: "JetBrains Mono", monospace; font-size: 16px; fill: var(--ink);
+  }
+  .pz-reveal { margin-top: 10px; }
+  .pz-reveal summary {
+    cursor: pointer; display: inline-block; padding: 5px 12px;
+    border: 1px solid var(--hair); border-radius: 999px;
+    font-family: "JetBrains Mono", monospace; font-size: 11px;
+    letter-spacing: .1em; text-transform: uppercase; color: var(--muted);
+  }
+  .pz-reveal summary:hover { border-color: var(--accent); color: var(--ink); }
+  .pz-reveal[open] summary { margin-bottom: 12px; }
+  .pz-reveal .pz-svg { margin-top: 4px; }
+
+  .fb-svg { display: block; width: 100%; margin: 4px 0 14px; height: auto; }
+  .fb-mark {
+    font-family: "JetBrains Mono", monospace; font-size: 11px; fill: var(--muted);
+  }
+  .fb-dot-note { font-family: "Inter", sans-serif; font-size: 9px; fill: var(--ink); }
+  .fb-dot-root { font-family: "Inter", sans-serif; font-size: 9px; font-weight: 600; fill: var(--paper); }
+  .wc-notes {
+    font-family: "JetBrains Mono", monospace; font-size: 14px;
+    color: var(--accent); margin: 0 0 4px;
+  }
+  .wc-drill { font-size: 15px; color: var(--muted); margin: 0; }
+  .wc-drill-label {
+    font-family: "JetBrains Mono", monospace; font-size: 11px;
+    letter-spacing: .12em; text-transform: uppercase; color: var(--accent);
+    margin-right: 8px;
+  }
+  .wc-facts { margin: 0; padding-left: 20px; font-size: 16px; }
+  .wc-facts li { margin: 0 0 7px; }
+
   /* ---------- Archive dropdown (top right) ---------- */
   .mast-top {
     display: flex; align-items: flex-start; justify-content: space-between;
@@ -225,8 +261,12 @@
     .theme-rail .rail-label { display: none; }
     .theme-rail button { width: auto; height: 42px; flex-direction: row; gap: 8px; padding: 0 14px; }
     .theme-rail .swatch { width: 16px; height: 16px; }
+    .mast-top { position: relative; }
     .archive-nav { position: static; }
-    .archive-menu { right: auto; left: 0; width: 100%; min-width: 0; }
+    .archive-menu {
+      right: auto; left: 0; width: 100%; min-width: 0;
+      max-height: 60vh; overflow-y: auto;
+    }
   }
 </style>
 </head>
@@ -242,20 +282,16 @@
   <div class="wrap">
     <header class="mast">
       <div class="mast-top">
-        <p class="kicker">FRIDAY, AUGUST 14, 2026</p>
+        <p class="kicker">SATURDAY, AUGUST 22, 2026</p>
         
     <details class="archive-nav">
       <summary aria-label="Browse previous pulls"><span>Archive</span><span class="chev" aria-hidden="true">&#9662;</span></summary>
       <div class="archive-menu">
         <span class="arch-label">Past week</span>
-        <a class="arch-item is-current" href="index.html"><span class="arch-when">Today</span><span class="arch-date">Fri Aug 14</span></a>
-<a class="arch-item" href="archive/2026-08-13.html"><span class="arch-when">Thu Aug 13</span><span class="arch-date">2026-08-13</span></a>
-<a class="arch-item" href="archive/2026-08-12.html"><span class="arch-when">Wed Aug 12</span><span class="arch-date">2026-08-12</span></a>
-<a class="arch-item" href="archive/2026-08-11.html"><span class="arch-when">Tue Aug 11</span><span class="arch-date">2026-08-11</span></a>
-<a class="arch-item" href="archive/2026-08-10.html"><span class="arch-when">Mon Aug 10</span><span class="arch-date">2026-08-10</span></a>
-<a class="arch-item" href="archive/2026-08-09.html"><span class="arch-when">Sun Aug 9</span><span class="arch-date">2026-08-09</span></a>
-<a class="arch-item" href="archive/2026-08-08.html"><span class="arch-when">Sat Aug 8</span><span class="arch-date">2026-08-08</span></a>
-<a class="arch-item" href="archive/2026-08-07.html"><span class="arch-when">Fri Aug 7</span><span class="arch-date">2026-08-07</span></a>
+        <a class="arch-item is-current" href="index.html"><span class="arch-when">Today</span><span class="arch-date">Sat Aug 22</span></a>
+<a class="arch-item" href="archive/2026-08-21.html"><span class="arch-when">Fri Aug 21</span><span class="arch-date">2026-08-21</span></a>
+<a class="arch-item" href="archive/2026-08-20.html"><span class="arch-when">Thu Aug 20</span><span class="arch-date">2026-08-20</span></a>
+<a class="arch-item" href="archive/2026-08-19.html"><span class="arch-when">Wed Aug 19</span><span class="arch-date">2026-08-19</span></a>
         <a class="arch-all" href="archive.html">Previous month &amp; older &rarr;</a>
       </div>
     </details>
@@ -269,35 +305,203 @@
     <section class="entry">
       <div class="entry-head">
         <span class="entry-num">01</span>
-        <h2 class="entry-title">GM &amp; Cadillac performance</h2>
+        <h2 class="entry-title">Track driving &amp; car control</h2>
       </div>
-      <div class="entry-body"><p>Cadillac confirmed a limited run of the CT4-V Blackwing with a new track package; deliveries begin this fall.</p><p>GM issued a minor software recall affecting some 2024 V-Series cars — dealer-applied.</p></div>
-      <div class="sources"><span class="sources-label">Sources</span><ul><li><a href="https://example.com/a">Cadillac Pressroom</a></li>
-<li><a href="https://example.com/b">Road &amp; Track</a></li></ul></div>
+      <div class="entry-body"><p>Sample reporting for this topic, written locally for the preview. Real runs pull live content from the web.</p></div>
+      <div class="sources"><span class="sources-label">Sources</span><ul><li><a href="https://example.com/a">Example Source</a></li></ul></div>
     </section>
     
 
     <section class="entry">
       <div class="entry-head">
         <span class="entry-num">02</span>
-        <h2 class="entry-title">Formula 1 News</h2>
+        <h2 class="entry-title">Blackwing &amp; V-Series</h2>
       </div>
-      <div class="entry-body"><p>Constructors' standings tightened after the weekend; the driver gap narrowed to 12 points.</p><p><strong>Unconfirmed:</strong> one outlet reports a mid-season seat change under discussion.</p></div>
-      <div class="sources"><span class="sources-label">Sources</span><ul><li><a href="https://example.com/c">Autosport</a></li></ul></div>
+      <div class="entry-body"><p>Sample reporting for this topic, written locally for the preview. Real runs pull live content from the web.</p></div>
+      <div class="sources"><span class="sources-label">Sources</span><ul><li><a href="https://example.com/a">Example Source</a></li></ul></div>
     </section>
     
 
     <section class="entry">
       <div class="entry-head">
         <span class="entry-num">03</span>
-        <h2 class="entry-title">AI and education</h2>
+        <h2 class="entry-title">AI research &amp; industry</h2>
       </div>
-      <div class="entry-body"><p>Two districts published guidance permitting AI tutors for ungraded math practice.</p></div>
-      <div class="sources"><span class="sources-label">Sources</span><ul><li><a href="https://example.com/d">EdWeek</a></li></ul></div>
+      <div class="entry-body"><p>Sample reporting for this topic, written locally for the preview. Real runs pull live content from the web.</p></div>
+      <div class="sources"><span class="sources-label">Sources</span><ul><li><a href="https://example.com/a">Example Source</a></li></ul></div>
+    </section>
+    
+
+    <section class="entry">
+      <div class="entry-head">
+        <span class="entry-num">04</span>
+        <h2 class="entry-title">Shikaku</h2>
+      </div>
+      <div class="entry-body">
+<style>
+.pz-wrap { --pz-line: var(--hair); margin: 0 0 4px; }
+.pz-board { touch-action: none; user-select: none; -webkit-user-select: none;
+  display: block; width: 100%; max-width: 360px; height: auto; cursor: crosshair; }
+.pz-bar { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin: 12px 0 0; }
+.pz-btn { appearance: none; cursor: pointer; background: transparent;
+  border: 1px solid var(--hair); border-radius: 999px; padding: 6px 13px;
+  font-family: "JetBrains Mono", monospace; font-size: 11px; letter-spacing: .1em;
+  text-transform: uppercase; color: var(--muted); }
+.pz-btn:hover { border-color: var(--accent); color: var(--ink); }
+.pz-status { font-family: "JetBrains Mono", monospace; font-size: 12px; color: var(--muted); }
+.pz-status.is-done { color: var(--accent); }
+</style>
+<p class="pz-rule">Divide the grid into rectangles. Every rectangle holds exactly one number, and that number is how many squares it covers. Drag to draw a rectangle; tap one to remove it.</p><div class="pz-wrap" id="pz-20260822"><svg viewBox="0 0 306 306" class="pz-board" role="img" aria-label="Shikaku grid, 7 by 7"><g class="pz-shapes"></g><rect x="6" y="6" width="294" height="294" fill="none" stroke="var(--ink)" stroke-width="2"/><line x1="48" y1="6" x2="48" y2="300" stroke="var(--hair)" stroke-width="1"/><line x1="90" y1="6" x2="90" y2="300" stroke="var(--hair)" stroke-width="1"/><line x1="132" y1="6" x2="132" y2="300" stroke="var(--hair)" stroke-width="1"/><line x1="174" y1="6" x2="174" y2="300" stroke="var(--hair)" stroke-width="1"/><line x1="216" y1="6" x2="216" y2="300" stroke="var(--hair)" stroke-width="1"/><line x1="258" y1="6" x2="258" y2="300" stroke="var(--hair)" stroke-width="1"/><line x1="6" y1="48" x2="300" y2="48" stroke="var(--hair)" stroke-width="1"/><line x1="6" y1="90" x2="300" y2="90" stroke="var(--hair)" stroke-width="1"/><line x1="6" y1="132" x2="300" y2="132" stroke="var(--hair)" stroke-width="1"/><line x1="6" y1="174" x2="300" y2="174" stroke="var(--hair)" stroke-width="1"/><line x1="6" y1="216" x2="300" y2="216" stroke="var(--hair)" stroke-width="1"/><line x1="6" y1="258" x2="300" y2="258" stroke="var(--hair)" stroke-width="1"/><text x="111.0" y="27.0" text-anchor="middle" dominant-baseline="central" class="pz-num">4</text><text x="69.0" y="69.0" text-anchor="middle" dominant-baseline="central" class="pz-num">2</text><text x="111.0" y="69.0" text-anchor="middle" dominant-baseline="central" class="pz-num">2</text><text x="195.0" y="27.0" text-anchor="middle" dominant-baseline="central" class="pz-num">2</text><text x="237.0" y="27.0" text-anchor="middle" dominant-baseline="central" class="pz-num">2</text><text x="279.0" y="27.0" text-anchor="middle" dominant-baseline="central" class="pz-num">2</text><text x="237.0" y="111.0" text-anchor="middle" dominant-baseline="central" class="pz-num">7</text><text x="279.0" y="153.0" text-anchor="middle" dominant-baseline="central" class="pz-num">7</text><text x="195.0" y="195.0" text-anchor="middle" dominant-baseline="central" class="pz-num">7</text><text x="111.0" y="237.0" text-anchor="middle" dominant-baseline="central" class="pz-num">7</text><text x="153.0" y="279.0" text-anchor="middle" dominant-baseline="central" class="pz-num">5</text><text x="279.0" y="279.0" text-anchor="middle" dominant-baseline="central" class="pz-num">2</text></svg><div class="pz-bar"><button type="button" class="pz-btn pz-clear">Clear</button><span class="pz-status">0 of 49 squares</span></div><details class="pz-reveal"><summary>Show solution</summary><svg viewBox="0 0 306 306" class="pz-svg" role="img" aria-label="Shikaku grid, 7 by 7"><rect x="6" y="6" width="294" height="294" fill="none" stroke="var(--ink)" stroke-width="2"/><line x1="48" y1="6" x2="48" y2="300" stroke="var(--hair)" stroke-width="1"/><line x1="90" y1="6" x2="90" y2="300" stroke="var(--hair)" stroke-width="1"/><line x1="132" y1="6" x2="132" y2="300" stroke="var(--hair)" stroke-width="1"/><line x1="174" y1="6" x2="174" y2="300" stroke="var(--hair)" stroke-width="1"/><line x1="216" y1="6" x2="216" y2="300" stroke="var(--hair)" stroke-width="1"/><line x1="258" y1="6" x2="258" y2="300" stroke="var(--hair)" stroke-width="1"/><line x1="6" y1="48" x2="300" y2="48" stroke="var(--hair)" stroke-width="1"/><line x1="6" y1="90" x2="300" y2="90" stroke="var(--hair)" stroke-width="1"/><line x1="6" y1="132" x2="300" y2="132" stroke="var(--hair)" stroke-width="1"/><line x1="6" y1="174" x2="300" y2="174" stroke="var(--hair)" stroke-width="1"/><line x1="6" y1="216" x2="300" y2="216" stroke="var(--hair)" stroke-width="1"/><line x1="6" y1="258" x2="300" y2="258" stroke="var(--hair)" stroke-width="1"/><rect x="8" y="8" width="164" height="38" fill="none" stroke="var(--accent)" stroke-width="2.5" rx="3"/><rect x="218" y="8" width="38" height="80" fill="none" stroke="var(--accent)" stroke-width="2.5" rx="3"/><rect x="260" y="8" width="38" height="80" fill="none" stroke="var(--accent)" stroke-width="2.5" rx="3"/><rect x="8" y="92" width="290" height="38" fill="none" stroke="var(--accent)" stroke-width="2.5" rx="3"/><rect x="8" y="134" width="290" height="38" fill="none" stroke="var(--accent)" stroke-width="2.5" rx="3"/><rect x="8" y="176" width="290" height="38" fill="none" stroke="var(--accent)" stroke-width="2.5" rx="3"/><rect x="8" y="218" width="290" height="38" fill="none" stroke="var(--accent)" stroke-width="2.5" rx="3"/><rect x="92" y="50" width="80" height="38" fill="none" stroke="var(--accent)" stroke-width="2.5" rx="3"/><rect x="176" y="8" width="38" height="80" fill="none" stroke="var(--accent)" stroke-width="2.5" rx="3"/><rect x="218" y="260" width="80" height="38" fill="none" stroke="var(--accent)" stroke-width="2.5" rx="3"/><rect x="8" y="50" width="80" height="38" fill="none" stroke="var(--accent)" stroke-width="2.5" rx="3"/><rect x="8" y="260" width="206" height="38" fill="none" stroke="var(--accent)" stroke-width="2.5" rx="3"/><text x="111.0" y="27.0" text-anchor="middle" dominant-baseline="central" class="pz-num">4</text><text x="69.0" y="69.0" text-anchor="middle" dominant-baseline="central" class="pz-num">2</text><text x="111.0" y="69.0" text-anchor="middle" dominant-baseline="central" class="pz-num">2</text><text x="195.0" y="27.0" text-anchor="middle" dominant-baseline="central" class="pz-num">2</text><text x="237.0" y="27.0" text-anchor="middle" dominant-baseline="central" class="pz-num">2</text><text x="279.0" y="27.0" text-anchor="middle" dominant-baseline="central" class="pz-num">2</text><text x="237.0" y="111.0" text-anchor="middle" dominant-baseline="central" class="pz-num">7</text><text x="279.0" y="153.0" text-anchor="middle" dominant-baseline="central" class="pz-num">7</text><text x="195.0" y="195.0" text-anchor="middle" dominant-baseline="central" class="pz-num">7</text><text x="111.0" y="237.0" text-anchor="middle" dominant-baseline="central" class="pz-num">7</text><text x="153.0" y="279.0" text-anchor="middle" dominant-baseline="central" class="pz-num">5</text><text x="279.0" y="279.0" text-anchor="middle" dominant-baseline="central" class="pz-num">2</text></svg></details></div>
+<script>
+(function () {
+  var box = document.getElementById("pz-20260822");
+  if (!box) return;
+  var svg = box.querySelector(".pz-board");
+  var layer = svg.querySelector(".pz-shapes");
+  var status = box.querySelector(".pz-status");
+  var KEY = "mp-shikaku-2026-08-22";
+  var R = 7, C = 7, CELL = 42, PAD = 6;
+  var VW = 306, VH = 306;
+  var CLUES = [[0,2,4],[1,1,2],[1,2,2],[0,4,2],[0,5,2],[0,6,2],[2,5,7],[3,6,7],[4,4,7],[5,2,7],[6,3,5],[6,6,2]];
+  var rects = [];
+  var drag = null;
+
+  function clueAt(r, c) {
+    for (var i = 0; i < CLUES.length; i++)
+      if (CLUES[i][0] === r && CLUES[i][1] === c) return CLUES[i][2];
+    return 0;
+  }
+  function cellFrom(ev) {
+    var b = svg.getBoundingClientRect();
+    var x = (ev.clientX - b.left) / b.width * VW;
+    var y = (ev.clientY - b.top) / b.height * VH;
+    var c = Math.floor((x - PAD) / CELL), r = Math.floor((y - PAD) / CELL);
+    if (r < 0 || c < 0 || r >= R || c >= C) return null;
+    return { r: r, c: c };
+  }
+  function norm(a, b) {
+    return { top: Math.min(a.r, b.r), left: Math.min(a.c, b.c),
+             h: Math.abs(a.r - b.r) + 1, w: Math.abs(a.c - b.c) + 1 };
+  }
+  function overlaps(x, list) {
+    for (var i = 0; i < list.length; i++) {
+      var y = list[i];
+      if (x.left < y.left + y.w && y.left < x.left + x.w &&
+          x.top < y.top + y.h && y.top < x.top + x.h) return true;
+    }
+    return false;
+  }
+  function check(x) {
+    var found = 0, val = 0;
+    for (var i = 0; i < CLUES.length; i++) {
+      var cr = CLUES[i][0], cc = CLUES[i][1];
+      if (cr >= x.top && cr < x.top + x.h && cc >= x.left && cc < x.left + x.w) {
+        found++; val = CLUES[i][2];
+      }
+    }
+    if (found !== 1) return false;
+    return val === x.h * x.w;
+  }
+  function el(tag, attrs) {
+    var n = document.createElementNS("http://www.w3.org/2000/svg", tag);
+    for (var k in attrs) n.setAttribute(k, attrs[k]);
+    return n;
+  }
+  function draw() {
+    while (layer.firstChild) layer.removeChild(layer.firstChild);
+    rects.forEach(function (x) {
+      layer.appendChild(el("rect", {
+        x: PAD + x.left * CELL + 2, y: PAD + x.top * CELL + 2,
+        width: x.w * CELL - 4, height: x.h * CELL - 4,
+        rx: 3, fill: "var(--accent)", "fill-opacity": "0.13",
+        stroke: "var(--accent)", "stroke-width": "2.5"
+      }));
+    });
+    if (drag) {
+      var ok = check(drag) && !overlaps(drag, rects);
+      layer.appendChild(el("rect", {
+        x: PAD + drag.left * CELL + 2, y: PAD + drag.top * CELL + 2,
+        width: drag.w * CELL - 4, height: drag.h * CELL - 4,
+        rx: 3, fill: ok ? "var(--accent)" : "var(--ink)",
+        "fill-opacity": ok ? "0.18" : "0.07",
+        stroke: ok ? "var(--accent)" : "var(--muted)",
+        "stroke-width": "2", "stroke-dasharray": ok ? "none" : "5 4"
+      }));
+    }
+    var filled = 0;
+    rects.forEach(function (x) { filled += x.h * x.w; });
+    if (filled === R * C) {
+      status.textContent = "Solved.";
+      status.className = "pz-status is-done";
+    } else {
+      status.textContent = filled + " of " + (R * C) + " squares";
+      status.className = "pz-status";
+    }
+  }
+  function save() {
+    try { localStorage.setItem(KEY, JSON.stringify(rects)); } catch (e) {}
+  }
+  function load() {
+    try {
+      var raw = localStorage.getItem(KEY);
+      if (!raw) return;
+      var got = JSON.parse(raw);
+      if (Object.prototype.toString.call(got) === "[object Array]") {
+        got.forEach(function (x) {
+          if (check(x) && !overlaps(x, rects)) rects.push(x);
+        });
+      }
+    } catch (e) {}
+  }
+
+  svg.addEventListener("pointerdown", function (ev) {
+    var cell = cellFrom(ev);
+    if (!cell) return;
+    ev.preventDefault();
+    for (var i = 0; i < rects.length; i++) {
+      var x = rects[i];
+      if (cell.r >= x.top && cell.r < x.top + x.h &&
+          cell.c >= x.left && cell.c < x.left + x.w) {
+        rects.splice(i, 1); save(); draw(); return;
+      }
+    }
+    drag = { start: cell, top: cell.r, left: cell.c, h: 1, w: 1 };
+    svg.setPointerCapture(ev.pointerId);
+    draw();
+  });
+  svg.addEventListener("pointermove", function (ev) {
+    if (!drag) return;
+    var cell = cellFrom(ev);
+    if (!cell) return;
+    ev.preventDefault();
+    var n = norm(drag.start, cell);
+    drag.top = n.top; drag.left = n.left; drag.h = n.h; drag.w = n.w;
+    draw();
+  });
+  function finish(ev) {
+    if (!drag) return;
+    var cand = { top: drag.top, left: drag.left, h: drag.h, w: drag.w };
+    drag = null;
+    if (check(cand) && !overlaps(cand, rects)) { rects.push(cand); save(); }
+    draw();
+  }
+  svg.addEventListener("pointerup", finish);
+  svg.addEventListener("pointercancel", function () { drag = null; draw(); });
+
+  box.querySelector(".pz-clear").addEventListener("click", function () {
+    rects = []; save(); draw();
+  });
+
+  load();
+  draw();
+})();
+</script>
+</div>
+      
     </section>
     
     </main>
-    <footer>Assembled FRIDAY, AUGUST 14, 2026 · regenerated daily</footer>
+    <footer>Assembled SATURDAY, AUGUST 22, 2026 · regenerated daily</footer>
   </div>
 <script>
   (function () {

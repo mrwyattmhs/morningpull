@@ -13,12 +13,15 @@ Requires the ANTHROPIC_API_KEY environment variable.
 import os
 import sys
 import html
+import random
 from datetime import datetime
 from zoneinfo import ZoneInfo
 
 import yaml
 import markdown as md
 from anthropic import Anthropic
+
+import wildcards
 
 
 # ----------------------------------------------------------------------
@@ -27,9 +30,40 @@ from anthropic import Anthropic
 def load_config(path="prompts.yaml"):
     with open(path, "r", encoding="utf-8") as f:
         cfg = yaml.safe_load(f)
-    if not cfg or "sections" not in cfg:
-        sys.exit("prompts.yaml has no 'sections:' list — nothing to build.")
+    if not cfg:
+        sys.exit("prompts.yaml is empty — nothing to build.")
+    if not (cfg.get("news_topics") or cfg.get("sections")):
+        sys.exit("prompts.yaml needs a 'news_topics:' list — nothing to build.")
     return cfg
+
+
+# ----------------------------------------------------------------------
+# Topic rotation
+#
+# Walk a window through the pool so every topic comes up in turn, rather
+# than picking at random (which would repeat some and starve others).
+# ----------------------------------------------------------------------
+def pick_topics(pool, per_day, date_iso):
+    """
+    Every topic gets used once per pass through the pool, but the pool is
+    reshuffled on each pass — so coverage stays even while the day-to-day
+    groupings keep changing. (A fixed order would pair the same topics
+    together forever whenever the pool divides evenly by per_day.)
+    """
+    if not pool:
+        return []
+    total = len(pool)
+    per_day = max(0, min(per_day, total))
+    if per_day == 0:
+        return []
+
+    day = datetime.strptime(date_iso, "%Y-%m-%d").timetuple().tm_yday
+    pos = (day * per_day) % total
+    cycle = (day * per_day) // total
+
+    order = list(pool)
+    random.Random(f"pull-cycle-{cycle}").shuffle(order)
+    return [order[(pos + i) % total] for i in range(per_day)]
 
 
 # ----------------------------------------------------------------------
@@ -377,6 +411,42 @@ _PAGE_CSS = """
   }
   a:focus-visible, button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 
+  /* ---------- Wildcards: puzzle, fretboard, numbers ---------- */
+  .pz-rule, .wc-lead { font-size: 16px; margin: 0 0 16px; }
+  .pz-svg { display: block; width: 100%; max-width: 340px; margin: 0 0 6px; height: auto; }
+  .pz-num {
+    font-family: "JetBrains Mono", monospace; font-size: 16px; fill: var(--ink);
+  }
+  .pz-reveal { margin-top: 10px; }
+  .pz-reveal summary {
+    cursor: pointer; display: inline-block; padding: 5px 12px;
+    border: 1px solid var(--hair); border-radius: 999px;
+    font-family: "JetBrains Mono", monospace; font-size: 11px;
+    letter-spacing: .1em; text-transform: uppercase; color: var(--muted);
+  }
+  .pz-reveal summary:hover { border-color: var(--accent); color: var(--ink); }
+  .pz-reveal[open] summary { margin-bottom: 12px; }
+  .pz-reveal .pz-svg { margin-top: 4px; }
+
+  .fb-svg { display: block; width: 100%; margin: 4px 0 14px; height: auto; }
+  .fb-mark {
+    font-family: "JetBrains Mono", monospace; font-size: 11px; fill: var(--muted);
+  }
+  .fb-dot-note { font-family: "Inter", sans-serif; font-size: 9px; fill: var(--ink); }
+  .fb-dot-root { font-family: "Inter", sans-serif; font-size: 9px; font-weight: 600; fill: var(--paper); }
+  .wc-notes {
+    font-family: "JetBrains Mono", monospace; font-size: 14px;
+    color: var(--accent); margin: 0 0 4px;
+  }
+  .wc-drill { font-size: 15px; color: var(--muted); margin: 0; }
+  .wc-drill-label {
+    font-family: "JetBrains Mono", monospace; font-size: 11px;
+    letter-spacing: .12em; text-transform: uppercase; color: var(--accent);
+    margin-right: 8px;
+  }
+  .wc-facts { margin: 0; padding-left: 20px; font-size: 16px; }
+  .wc-facts li { margin: 0 0 7px; }
+
   /* ---------- Archive dropdown (top right) ---------- */
   .mast-top {
     display: flex; align-items: flex-start; justify-content: space-between;
@@ -459,8 +529,12 @@ _PAGE_CSS = """
     .theme-rail .rail-label { display: none; }
     .theme-rail button { width: auto; height: 42px; flex-direction: row; gap: 8px; padding: 0 14px; }
     .theme-rail .swatch { width: 16px; height: 16px; }
+    .mast-top { position: relative; }
     .archive-nav { position: static; }
-    .archive-menu { right: auto; left: 0; width: 100%; min-width: 0; }
+    .archive-menu {
+      right: auto; left: 0; width: 100%; min-width: 0;
+      max-height: 60vh; overflow-y: auto;
+    }
   }
 """
 
@@ -560,15 +634,25 @@ def main():
     model = os.environ.get("CLAUDE_MODEL") or cfg.get("model", "claude-sonnet-5")
     max_searches = int(cfg.get("max_searches_per_prompt", 5))
     tz = ZoneInfo(cfg.get("timezone", "America/New_York"))
-    dateline = datetime.now(tz).strftime("%A, %B %-d, %Y").upper()
+    now = datetime.now(tz)
+    dateline = now.strftime("%A, %B %-d, %Y").upper()
+    today_iso = now.strftime("%Y-%m-%d")
+
+    # Today's news topics, drawn from the pool. Falls back to a plain
+    # `sections:` list so an older prompts.yaml still works.
+    pool = cfg.get("news_topics") or cfg.get("sections") or []
+    per_day = int(cfg.get("news_per_day", len(pool)))
+    todays = pick_topics(pool, per_day, today_iso)
 
     client = Anthropic()
 
     rendered = []
-    for i, sec in enumerate(cfg["sections"], start=1):
-        title = sec.get("title", f"Section {i}")
+    n = 0
+    for sec in todays:
+        n += 1
+        title = sec.get("title", f"Section {n}")
         prompt = sec.get("prompt", "").strip()
-        print(f"  [{i}/{len(cfg['sections'])}] {title} ...", flush=True)
+        print(f"  [{n}/{len(todays)}] {title} ...", flush=True)
         if not prompt:
             body, sources = "<p><em>This section has no prompt.</em></p>", []
         else:
@@ -578,14 +662,29 @@ def main():
                 # One bad section shouldn't sink the whole page.
                 body = f"<p><em>Couldn't build this section today: {html.escape(str(e))}</em></p>"
                 sources = []
-        rendered.append(render_section(i, title, body, sources))
+        rendered.append(render_section(n, title, body, sources))
+
+    # Wildcards: built locally, no API call, no tokens.
+    wc_keys = wildcards.pick(
+        today_iso,
+        cfg.get("wildcards", []),
+        int(cfg.get("wildcards_per_day", 1)),
+    )
+    for key in wc_keys:
+        n += 1
+        print(f"  [wildcard] {key} ...", flush=True)
+        try:
+            wtitle, wbody = wildcards.build(key, today_iso)
+        except Exception as e:
+            wtitle = key.title()
+            wbody = f"<p><em>Couldn't build {html.escape(key)} today: {html.escape(str(e))}</em></p>"
+        rendered.append(render_section(n, wtitle, wbody, []))
 
     sections_html = "\n".join(rendered)
 
     # Today's dated copy goes into the archive first, so it shows up in the
     # list alongside everything that came before it.
     os.makedirs(ARCHIVE_DIR, exist_ok=True)
-    today_iso = datetime.now(tz).strftime("%Y-%m-%d")
     dates = sorted(set(archive_dates()) | {today_iso}, reverse=True)
 
     # Root page: links point straight at archive/ and archive.html.
