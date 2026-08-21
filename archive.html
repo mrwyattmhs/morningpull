@@ -143,6 +143,42 @@
   }
   a:focus-visible, button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 
+  /* ---------- Wildcards: puzzle, fretboard, numbers ---------- */
+  .pz-rule, .wc-lead { font-size: 16px; margin: 0 0 16px; }
+  .pz-svg { display: block; width: 100%; max-width: 340px; margin: 0 0 6px; height: auto; }
+  .pz-num {
+    font-family: "JetBrains Mono", monospace; font-size: 16px; fill: var(--ink);
+  }
+  .pz-reveal { margin-top: 10px; }
+  .pz-reveal summary {
+    cursor: pointer; display: inline-block; padding: 5px 12px;
+    border: 1px solid var(--hair); border-radius: 999px;
+    font-family: "JetBrains Mono", monospace; font-size: 11px;
+    letter-spacing: .1em; text-transform: uppercase; color: var(--muted);
+  }
+  .pz-reveal summary:hover { border-color: var(--accent); color: var(--ink); }
+  .pz-reveal[open] summary { margin-bottom: 12px; }
+  .pz-reveal .pz-svg { margin-top: 4px; }
+
+  .fb-svg { display: block; width: 100%; margin: 4px 0 14px; height: auto; }
+  .fb-mark {
+    font-family: "JetBrains Mono", monospace; font-size: 11px; fill: var(--muted);
+  }
+  .fb-dot-note { font-family: "Inter", sans-serif; font-size: 9px; fill: var(--ink); }
+  .fb-dot-root { font-family: "Inter", sans-serif; font-size: 9px; font-weight: 600; fill: var(--paper); }
+  .wc-notes {
+    font-family: "JetBrains Mono", monospace; font-size: 14px;
+    color: var(--accent); margin: 0 0 4px;
+  }
+  .wc-drill { font-size: 15px; color: var(--muted); margin: 0; }
+  .wc-drill-label {
+    font-family: "JetBrains Mono", monospace; font-size: 11px;
+    letter-spacing: .12em; text-transform: uppercase; color: var(--accent);
+    margin-right: 8px;
+  }
+  .wc-facts { margin: 0; padding-left: 20px; font-size: 16px; }
+  .wc-facts li { margin: 0 0 7px; }
+
   /* ---------- Archive dropdown (top right) ---------- */
   .mast-top {
     display: flex; align-items: flex-start; justify-content: space-between;
@@ -225,8 +261,12 @@
     .theme-rail .rail-label { display: none; }
     .theme-rail button { width: auto; height: 42px; flex-direction: row; gap: 8px; padding: 0 14px; }
     .theme-rail .swatch { width: 16px; height: 16px; }
+    .mast-top { position: relative; }
     .archive-nav { position: static; }
-    .archive-menu { right: auto; left: 0; width: 100%; min-width: 0; }
+    .archive-menu {
+      right: auto; left: 0; width: 100%; min-width: 0;
+      max-height: 60vh; overflow-y: auto;
+    }
   }
 </style>
 </head>

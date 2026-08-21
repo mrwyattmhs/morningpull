@@ -143,6 +143,42 @@
   }
   a:focus-visible, button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 
+  /* ---------- Wildcards: puzzle, fretboard, numbers ---------- */
+  .pz-rule, .wc-lead { font-size: 16px; margin: 0 0 16px; }
+  .pz-svg { display: block; width: 100%; max-width: 340px; margin: 0 0 6px; height: auto; }
+  .pz-num {
+    font-family: "JetBrains Mono", monospace; font-size: 16px; fill: var(--ink);
+  }
+  .pz-reveal { margin-top: 10px; }
+  .pz-reveal summary {
+    cursor: pointer; display: inline-block; padding: 5px 12px;
+    border: 1px solid var(--hair); border-radius: 999px;
+    font-family: "JetBrains Mono", monospace; font-size: 11px;
+    letter-spacing: .1em; text-transform: uppercase; color: var(--muted);
+  }
+  .pz-reveal summary:hover { border-color: var(--accent); color: var(--ink); }
+  .pz-reveal[open] summary { margin-bottom: 12px; }
+  .pz-reveal .pz-svg { margin-top: 4px; }
+
+  .fb-svg { display: block; width: 100%; margin: 4px 0 14px; height: auto; }
+  .fb-mark {
+    font-family: "JetBrains Mono", monospace; font-size: 11px; fill: var(--muted);
+  }
+  .fb-dot-note { font-family: "Inter", sans-serif; font-size: 9px; fill: var(--ink); }
+  .fb-dot-root { font-family: "Inter", sans-serif; font-size: 9px; font-weight: 600; fill: var(--paper); }
+  .wc-notes {
+    font-family: "JetBrains Mono", monospace; font-size: 14px;
+    color: var(--accent); margin: 0 0 4px;
+  }
+  .wc-drill { font-size: 15px; color: var(--muted); margin: 0; }
+  .wc-drill-label {
+    font-family: "JetBrains Mono", monospace; font-size: 11px;
+    letter-spacing: .12em; text-transform: uppercase; color: var(--accent);
+    margin-right: 8px;
+  }
+  .wc-facts { margin: 0; padding-left: 20px; font-size: 16px; }
+  .wc-facts li { margin: 0 0 7px; }
+
   /* ---------- Archive dropdown (top right) ---------- */
   .mast-top {
     display: flex; align-items: flex-start; justify-content: space-between;
@@ -225,8 +261,12 @@
     .theme-rail .rail-label { display: none; }
     .theme-rail button { width: auto; height: 42px; flex-direction: row; gap: 8px; padding: 0 14px; }
     .theme-rail .swatch { width: 16px; height: 16px; }
+    .mast-top { position: relative; }
     .archive-nav { position: static; }
-    .archive-menu { right: auto; left: 0; width: 100%; min-width: 0; }
+    .archive-menu {
+      right: auto; left: 0; width: 100%; min-width: 0;
+      max-height: 60vh; overflow-y: auto;
+    }
   }
 </style>
 </head>
@@ -266,68 +306,123 @@
     <section class="entry">
       <div class="entry-head">
         <span class="entry-num">01</span>
-        <h2 class="entry-title">GM &amp; Cadillac performance</h2>
+        <h2 class="entry-title">Enthusiast car market</h2>
       </div>
-      <div class="entry-body"><p><strong>Cadillac V-ONE Concept Unveiled</strong> — GM showed off a track-only supercar concept at The Quail on August 18 featuring 830 horsepower from a naturally aspirated hybrid V8, targeting lap times near the racing V-Series.R.</p>
-<p><strong>LYRIQ-V Performance Numbers Confirmed</strong> — The 2026 Cadillac Lyriq-V hits 0-60 in 3.3 seconds, powered by dual electric motors generating 615 horsepower and 650 lb-ft of torque.</p>
-<p><strong>Escalade-V Engine Recall</strong> — 2021-2024 Cadillac Escalade models with 6.2L V8 engines are being recalled for potential connecting rod and crankshaft defects, with owner notifications expected June 9, 2025.</p></div>
-      <div class="sources"><span class="sources-label">Sources</span><ul><li><a href="https://gmauthority.com/blog/2026/08/cadillac-v-one-concept-should-gm-build-it/">Cadillac V-ONE Concept: Should GM Build It?</a></li>
-<li><a href="https://www.ritcheycadillac.com/cadillacs-2026-model-lineup.html">Exploring Cadillac&#x27;s Upcoming 2026 Model Lineup | Ritchey Cadillac</a></li>
-<li><a href="https://www.motoringresearch.com/slideshow/new-2026-cadillac-optiq-v-and-all-its-v-series-ancestors/">New 2026 Cadillac Optiq-V – and all its V-Series ancestors - Motoring Research</a></li>
-<li><a href="https://www.kbb.com/gmc/recall/">GMC Recall Notices &amp; Safety News | Kelley Blue Book</a></li></ul></div>
+      <div class="entry-body"><h2>ENTHUSIAST &amp; COLLECTOR CAR MARKET</h2>
+<p><strong>Auction Records &amp; Recent Sales</strong></p>
+<p>Monterey Car Week 2026 shattered records with $755.6M in total sales, surpassing even the pandemic-fueled 2022 peak. Notable top results include:</p>
+<p>• 1964 Shelby Cobra Daytona Coupe: $42.9M (record for an American car)
+• 1963 Chevrolet Corvette Grand Sport: $18.7M (record for a Corvette)
+• 1996 McLaren F1 GTR: $34.7M (record for a British car)
+• 1935 Duesenberg Model JN: $9.1M</p>
+<p>Mecum's January Kissimmee sale reached $445M (doubling the prior year), while Arizona's January and March Amelia Island/Miami auctions combined for $255.9M, up from $195.1M the year before.</p>
+<p><strong>The Market's Tale of Two Tiers</strong></p>
+<p>The market is sharply diverging between cars collectors desperately want and everything else, with the clearest story of 2026 being the continued acceleration of this divergence. Modern low-production Ferraris—particularly those with halo status—commanded prices that would have seemed implausible a few years ago.</p>
+<p>However, everyday classics are left trying to keep pace with inflation while supercars and blue-chip icons keep setting records.</p>
+<p><strong>Appreciation &amp; Depreciation</strong></p>
+<p>• Modern classics (2000s+) were the only segment to see price rises, with examples like the 2000 Honda S2000 AP1 (+37.5%), 1999 Nissan Skyline R34 (+41%), and 2000 BMW Z8 (+25%).
+• Mass-market collectibles are generally falling in value; the Hagerty Hundred (weighted-average of 100 most insured vehicles) peaked at over $50K in May 2022 but has fallen to $43,408.
+• A Series I Jaguar E-Type flat-floor that previously traded around $300,000 sold for approximately $128,000.</p>
+<p><strong>Modern Performance Cars Trending Toward Collectibility</strong></p>
+<p>Collectors prioritize experience: cars delivering distinct driving experiences, mechanical engagement, and cultural identity perform far better than pure historical artifacts. The Porsche Carrera GT, Ferrari Enzo, Lamborghini Miura SV, and Diablo SE30 continue strong results—analog, expressive, and deeply authored vehicles.</p>
+<p>Toyota Supras, Nissan Skylines, Mazda RX-7s, Acura Integras, Mitsubishi Evolutions, Subaru WRXs, and Honda performance models continue generating strong interest from younger collectors.</p>
+<p>Hagerty's 2026 Bull Market List "shifts gears into the '90s and '00s," highlighting the growing appeal of modern speed, manual transmissions, and limited electronic interference.</p></div>
+      <div class="sources"><span class="sources-label">Sources</span><ul><li><a href="https://www.hagerty.com/media/market-trends/2026-monterey-car-week-auctions-shatter-record-with-756m-in-sales/">2026 Monterey Car Week Auctions Shatter Record with $756M in Sales - Hagerty Media</a></li>
+<li><a href="https://www.hagerty.com/media/market-trends/hagerty-insider/five-smart-and-fun-collector-car-buys-in-2026/">Five Smart (and Fun) Collector-Car Buys in 2026 - Hagerty Media</a></li>
+<li><a href="https://finance.yahoo.com/markets/stocks/articles/july-2026-collector-car-auction-213022347.html">The July 2026 Collector Car Auction Market: Supercars Sprint Ahead While the Middle Splits</a></li>
+<li><a href="https://www.accio.com/business/trend-of-classic-car">Trend of Classic Car in 2026: Growth &amp; Shifts</a></li>
+<li><a href="https://www.hagerty.com/media/market-trends/hagerty-insider/data-driven/heres-what-our-experts-predict-for-the-2026-collector-car-market/">Here’s What Our Experts Predict for the 2026 Collector Car Market - Hagerty Media</a></li>
+<li><a href="https://www.wearecurated.com/blog/recent-car-auction-trends">What Recent Auctions Revealed About the Collector Car Market | Curated</a></li>
+<li><a href="https://autos.yahoo.com/classic-and-collector/articles/hottest-collector-car-segments-2026-213059509.html">These Are The Hottest Collector Car Segments In 2026</a></li>
+<li><a href="https://automotivehistory.org/classic-car-prices-2026-market-trends/">Are Classic Car Prices Dropping in 2026? A Historical Look at Market Booms and Corrections - This Day In Automotive History</a></li></ul></div>
     </section>
     
 
     <section class="entry">
       <div class="entry-head">
         <span class="entry-num">02</span>
-        <h2 class="entry-title">Formula 1 News</h2>
+        <h2 class="entry-title">Mathematics</h2>
       </div>
-      <div class="entry-body"><h2>Latest F1 News</h2>
-<p><strong>Current Race</strong>: The Dutch Grand Prix is ongoing. Honda revealed details of a 'Spec 2' power unit for the Dutch GP.</p>
-<p><strong>Recent Announcements</strong>:
-- Alex Albon committed to Williams F1 team for 2027
-- Carlos Sainz signed a new multi-year contract with Williams
-- Max Verstappen signed a contract extension with Red Bull through to 2030</p>
-<h2>Championship Standings</h2>
-<p><strong>Drivers' Championship</strong> (after round 11 of 23):
-Kimi Antonelli leads with 219 points, 50 ahead of Lewis Hamilton</p>
-<p><strong>Constructors' Championship</strong>:
-Mercedes lead with 379 points</p>
-<h2>Driver Changes</h2>
-<p><strong>2027 Confirmations</strong>:
-- Alex Albon signed a one-year extension with Williams
-- Lewis Hamilton confirmed he has a contract for 2027 at Ferrari
-- George Russell is signed with Mercedes until at least 2027
-- Max Verstappen signed through 2030 with Red Bull</p>
-<p><strong>Still Undecided</strong>:
-Max Verstappen may have a deal until 2028, but his exit clause linked to team performance remains uncertain. Fernando Alonso's Aston Martin deal runs until end of 2026.</p></div>
-      <div class="sources"><span class="sources-label">Sources</span><ul><li><a href="https://www.autosport.com/f1/">Latest Formula 1 News, Analysis, Results and More</a></li>
-<li><a href="https://www.formula1.com/en/latest">F1 - The Official Home of Formula 1® Racing</a></li>
-<li><a href="https://www.gptoday.com/">F1, Formula 1: GPToday.com - Hottest News - All the F1 news, 24 hours a day, 365 days a year.</a></li>
-<li><a href="https://www.espn.com/f1/">Formula 1 on ESPN - Grand Prix Results, News and Standings</a></li>
-<li><a href="https://www.f1-fansite.com/f1-results/f1-standings-2026-championship/">2026 F1 Standings: Drivers &amp; Constructors Championship List</a></li>
-<li><a href="https://www.skysports.com/f1/news/12040/13511938/f1-driver-contracts-how-long-are-lewis-hamilton-max-verstappen-lando-norris-and-other-formula-1-stars-signed-for-ahead-of-2026-season">F1 driver contracts: How long are Lewis Hamilton, Max Verstappen, Lando Norris and other Formula 1 stars signed for? | F1 News | Sky Sports</a></li>
-<li><a href="https://www.motorsportmagazine.com/articles/single-seaters/f1/f1-2027-driver-line-ups-latest-contract-news-and-rumours/">What will Verstappen decide? F1 2027 driver line-ups: latest contract news and rumours - Motor Sport Magazine</a></li>
-<li><a href="https://www.espn.com/f1/story/_/id/49515865/f1-2027-driver-lineups-lewis-hamilton-max-verstappen-seat-contract">F1 2027 driver lineups: From Hamilton to Verstappen, who has a seat - and who&#x27;s out of contract?</a></li></ul></div>
+      <div class="entry-body"><p>I'll search for recent mathematics news across several areas.## Mathematics News &amp; Highlights</p>
+<h3>Major Breakthroughs</h3>
+<p><strong>AI Solves Long-Standing Problems</strong></p>
+<p>In 2026, a collaboration between the Institute for Advanced Study and DeepMind used the AI system LeanMind to prove the Sylvester-Gallai conjecture—the first major open problem solved by AI without substantial human guidance. The proof was formally verified in Coq and published in the Annals of Mathematics. Why it matters: This exposes the gap between classical mathematical practice—where proofs are often accepted on human intuition—and the new reality where machine-generated proofs demand formal verification to be trusted.</p>
+<p>An AI-generated proof disproves the Erdős unit distance conjecture, demonstrating that for infinitely many values of n, the maximum number of unit-distance pairs among n points in the plane can exceed n1+δ for some δ &gt; 0. Why it matters: For nearly 80 years, mathematicians have struggled to solve a classic geometry puzzle first posed by Paul Erdős in 1946.</p>
+<p><strong>Century-Old Hadamard Conjecture Resolved</strong></p>
+<p>A team from Oxford and MIT used a combination of combinatorial design theory and quantum annealing to construct explicit Hadamard matrices for all orders up to 1000, and then extended the method to prove the conjecture for all orders. Why it matters: The Hadamard conjecture—which posits that a Hadamard matrix exists for every order divisible by 4—remained open for over a century. Hadamard matrices are crucial for experimental design and error-correcting codes.</p>
+<h3>Major Prizes &amp; Honors</h3>
+<p><strong>2026 Fields Medals</strong> (awarded July 23, 2026)</p>
+<p>The International Mathematical Union awarded four Fields Medals at the International Congress of Mathematicians in Philadelphia. They went to Hong Wang, Yu Deng, John Pardon and Jacob Tsimerman. Wang is the third woman to receive the medal since it was first awarded in 1936. Each closed a problem that had been open for decades, and in two cases for more than a century.</p>
+<p><strong>2026 Abel Prize</strong></p>
+<p>The Norwegian Academy of Science and Letters awarded the 2026 Abel Prize to Gerd Faltings, director emeritus at the Max Planck Institute for Mathematics in Bonn. This prestigious honor recognizes Faltings as the first German researcher to receive the award. Why it matters: His 1983 proof of the Mordell conjecture solved a 60-year-old puzzle and earned him the Fields Medal in 1986. His proof has had far-reaching implications for the eventual proof of Fermat's Last Theorem.</p>
+<p><strong>2025 Breakthrough Prize in Mathematics</strong></p>
+<p>Dennis Gaitsgory received the 2025 Breakthrough Prize in Mathematics for his central role in the proof of the geometric Langlands conjecture, described as the "grand unified theory of mathematics." This central component of a broader research program resulted in a proof totaling more than 800 pages and marked the culmination of 30 years of work.</p>
+<h3>Mathematics Education</h3>
+<p><strong>National Focus on Math Reform</strong></p>
+<p>States are expanding opportunity for students by enacting policies that focus on improving math outcomes, which are tied to economic success. Only 39% of fourth graders and 27% of eighth graders meet the National Assessment of Educational Progress (NAEP) standards in math.</p>
+<p>Alabama has demonstrated itself as a national leader in math policy with its Numeracy Act, which led the state to return to pre-pandemic proficiency levels. Alabama, Maryland and Indiana have already taken steps to reform math instruction.</p>
+<p><strong>Personalized Learning Models</strong></p>
+<p>The Collaboratory to Advance Mathematics Education and Learning (CAMEL) for K-12 initiative aims to advance mathematics learning through collaboration drawing on cognitive science, computer science, machine learning, and education research.</p></div>
+      <div class="sources"><span class="sources-label">Sources</span><ul><li><a href="https://earezki.com/ai-news/2026-08-03-ten-breakthrough-advances-in-mathematics-and-theoretical-computer-science-2026/">10 Breakthroughs in Mathematics and Theoretical CS (2026): AI Proofs, Quantum Leaps, and Formal Verification • Dev|Journal</a></li>
+<li><a href="https://phys.org/news/2026-05-ai-major-breakthrough-math-problem.html">AI makes a major breakthrough in a math problem that had stumped experts for decades</a></li>
+<li><a href="https://dev.to/kaixintelligence/ten-breakthrough-advances-in-mathematics-and-theoretical-computer-science-2026-13ac">Ten Breakthrough Advances in Mathematics and Theoretical Computer Science (2026) - DEV Community</a></li>
+<li><a href="https://gauravtiwari.org/fields-medal-award-winners/">Fields Medal Winners: Complete List From 1936 to 2026 - Gaurav Tiwari</a></li>
+<li><a href="https://bookstopology.substack.com/p/2026-abel-prize">2026 Abel Prize</a></li>
+<li><a href="https://www.math.harvard.edu/?p=14661">www.math.harvard.edu</a></li>
+<li><a href="https://www.quantamagazine.org/the-year-in-math-20241216/">The Year in Math | Quanta Magazine</a></li>
+<li><a href="https://excelined.org/2026/01/09/8-education-policy-trends-for-state-lawmakers-in-2026/">8 Education Policy Trends for State Lawmakers in 2026</a></li>
+<li><a href="https://www.nsf.gov/funding/opportunities/collaboratory-advance-mathematics-education-learning-k-12">Collaboratory to Advance Mathematics Education and Learning for K-12 | NSF - U.S. National Science Foundation</a></li></ul></div>
     </section>
     
 
     <section class="entry">
       <div class="entry-head">
         <span class="entry-num">03</span>
-        <h2 class="entry-title">Hobbies</h2>
+        <h2 class="entry-title">IndyCar, IMSA &amp; endurance racing</h2>
       </div>
-      <div class="entry-body"><p><strong>TOP 3 INTERESTING ARTICLES</strong></p>
-<p><strong>1. Martin Guitar + Joe Bonamassa Signature Model</strong>
-Martin releases a recreation of Joe Bonamassa's beloved 1937 00-17 guitar as an Artist Signature model in both Standard Series. (August 13, 2026)</p>
-<p><strong>2. Omega Speedmaster Green Dial Golf Edition</strong>
-Omega quietly added a new Speedmaster Professional to its catalog in full 18K Moonshine gold with a green dial and golf-inspired subdials. (July 8, 2026)</p>
-<p><strong>3. Martin Road Series 2026 Overhaul</strong>
-Martin Guitars unveils a complete overhaul of its mid-range models. The Road Series 2026 features two sub-series with the sound of Martin legends. (January 2026)</p></div>
-      <div class="sources"><span class="sources-label">Sources</span><ul><li><a href="https://www.themusiczoo.com/blogs/news/tagged/martin">Guitar News: Martin | The Music Zoo</a></li>
-<li><a href="https://www.gearpatrol.com/watches/omega-speedmaster-masters-green/">Omega&#x27;s Secret New Speedmaster Is a Grail for Golf Lovers | Gear Patrol</a></li>
-<li><a href="https://www.gearnews.com/manufacturer/martin/">Martin News and rumors - gearnews.com</a></li></ul></div>
+      <div class="entry-body"><p>I'll search for recent news in these motorsport series for you.## INDYCAR</p>
+<p><strong>Championship</strong>
+Alex Palou holds a 133-point lead in the championship after finishing fourth at Markham, where Romain Grosjean jumped to 18th after a runner-up finish. David Malukas is four points behind Kyle Kirkwood in third, while Christian Lundgaard is just two points back of Malukas.</p>
+<p><strong>Recent Race</strong>
+A wild race on the streets of Markham took place on August 16, with Marcus Ericsson claiming victory and Romain Grosjean finishing second.</p>
+<p><strong>Driver News</strong>
+F1 veteran Yuki Tsunoda is in talks for a 2027 IndyCar seat with Meyer Shank.</p>
+<p><strong>Upcoming</strong>
+The Honda Indy 200 at Mid-Ohio runs July 3-5, 2026 (NTT INDYCAR SERIES). Note: Mid-Ohio's IMSA event occurs earlier in June.</p>
+<hr />
+<h2>IMSA</h2>
+<p><strong>Championship Status</strong>
+In GTP drivers standings: Jack Aitken leads with 2400 points, Laurin Heinrich has 2282, and Renger van der Zande and Nick Yelloly are tied at 2215.</p>
+<p><strong>Teams Standings</strong>
+The No. 31 Cadillac Whelen is the current GTP Teams' Championship leader. The No. 22 United Autosports currently leads the LMP2 Teams' Championship.</p>
+<p><strong>Upcoming at VIR</strong>
+IMSA WeatherTech SportsCar Championship races at Virginia International Raceway on Friday August 21, Saturday August 22, and Sunday August 23, 2026.</p>
+<p><strong>Mid-Ohio IMSA Schedule</strong>
+The 2026 schedule features the O'Reilly Auto Parts Four Hours of Mid-Ohio with IMSA sports car racing and INDYCAR. The weekend features a four-hour Michelin Pilot Challenge endurance race plus VP Racing SportsCar Challenge and the IMSA Ford Mustang Challenge.</p>
+<hr />
+<h2>WEC</h2>
+<p><strong>2026 Calendar Change</strong>
+The 2026 FIA WEC season will finish in Europe, with the 6 Hours of Barcelona and 6 Hours of Monza replacing the originally planned Qatar and Bahrain rounds.</p>
+<p><strong>Hypercar Development</strong>
+Ferrari is evaluating potential development parts for the 499P, pointing toward the 2027 FIA WEC Hypercar season rather than any immediate update.</p></div>
+      <div class="sources"><span class="sources-label">Sources</span><ul><li><a href="https://www.motorsport.com/indycar/news/complete-indycar-championship-standings-after-2026-markham/10846741/">Complete IndyCar championship standings after 2026 Markham</a></li>
+<li><a href="https://www.motorsportweek.com/2026/08/16/indycar-markham-race-results/">IndyCar Markham – Race Results - Motorsport Week</a></li>
+<li><a href="https://www.motorsport.com/indycar/news/">IndyCar News - The Latest News, Articles, Features, Results and More</a></li>
+<li><a href="https://www.midohio.com/calendar">Mid Ohio Sports Car Course - Calendar</a></li>
+<li><a href="https://www.imsa.com/">IMSA Official Home | Race results, schedule, standings, news, drivers</a></li>
+<li><a href="https://en.wikipedia.org/wiki/2026_IMSA_SportsCar_Championship">2026 IMSA SportsCar Championship</a></li>
+<li><a href="https://midohio.com/news-m/1206-mid-ohio-sports-car-course-announces-2026-racing-schedule">Mid Ohio Sports Car Course - Mid-Ohio Sports Car Course announces 2026 racing schedule</a></li>
+<li><a href="https://www.autonext.co/news/indycar-ir-28-2028-chassis">IndyCar&#x27;s new IR-28 chassis debuts in 2028</a></li></ul></div>
+    </section>
+    
+
+    <section class="entry">
+      <div class="entry-head">
+        <span class="entry-num">04</span>
+        <h2 class="entry-title">Fretboard</h2>
+      </div>
+      <div class="entry-body"><p class="wc-lead"><strong>F# Dorian</strong> — Minor with a raised sixth — the hopeful minor.</p><p class="wc-notes">F# · G# · A · B · C# · D# · E</p><svg viewBox="0 0 612 190" class="fb-svg" role="img" aria-label="Fretboard diagram"><line x1="34" y1="26" x2="34" y2="156" stroke="var(--ink)" stroke-width="3" opacity="0.55"/><line x1="80" y1="26" x2="80" y2="156" stroke="var(--ink)" stroke-width="1" opacity="0.55"/><line x1="126" y1="26" x2="126" y2="156" stroke="var(--ink)" stroke-width="1" opacity="0.55"/><line x1="172" y1="26" x2="172" y2="156" stroke="var(--ink)" stroke-width="1" opacity="0.55"/><line x1="218" y1="26" x2="218" y2="156" stroke="var(--ink)" stroke-width="1" opacity="0.55"/><line x1="264" y1="26" x2="264" y2="156" stroke="var(--ink)" stroke-width="1" opacity="0.55"/><line x1="310" y1="26" x2="310" y2="156" stroke="var(--ink)" stroke-width="1" opacity="0.55"/><line x1="356" y1="26" x2="356" y2="156" stroke="var(--ink)" stroke-width="1" opacity="0.55"/><line x1="402" y1="26" x2="402" y2="156" stroke="var(--ink)" stroke-width="1" opacity="0.55"/><line x1="448" y1="26" x2="448" y2="156" stroke="var(--ink)" stroke-width="1" opacity="0.55"/><line x1="494" y1="26" x2="494" y2="156" stroke="var(--ink)" stroke-width="1" opacity="0.55"/><line x1="540" y1="26" x2="540" y2="156" stroke="var(--ink)" stroke-width="1" opacity="0.55"/><line x1="586" y1="26" x2="586" y2="156" stroke="var(--ink)" stroke-width="1" opacity="0.55"/><line x1="34" y1="26" x2="586" y2="26" stroke="var(--muted)" stroke-width="1"/><line x1="34" y1="52" x2="586" y2="52" stroke="var(--muted)" stroke-width="1"/><line x1="34" y1="78" x2="586" y2="78" stroke="var(--muted)" stroke-width="1"/><line x1="34" y1="104" x2="586" y2="104" stroke="var(--muted)" stroke-width="1"/><line x1="34" y1="130" x2="586" y2="130" stroke="var(--muted)" stroke-width="1"/><line x1="34" y1="156" x2="586" y2="156" stroke="var(--muted)" stroke-width="1"/><text x="149.0" y="178" text-anchor="middle" class="fb-mark">3</text><text x="241.0" y="178" text-anchor="middle" class="fb-mark">5</text><text x="333.0" y="178" text-anchor="middle" class="fb-mark">7</text><text x="425.0" y="178" text-anchor="middle" class="fb-mark">9</text><text x="563.0" y="178" text-anchor="middle" class="fb-mark">12</text><text x="20" y="26" text-anchor="middle" dominant-baseline="central" class="fb-mark">E</text><circle cx="34" cy="26" r="10" fill="var(--paper)" stroke="var(--ink)" stroke-width="1.5"/><text x="34" y="26" text-anchor="middle" dominant-baseline="central" class="fb-dot-note">E</text><circle cx="103.0" cy="26" r="10" fill="var(--accent)" stroke="var(--accent)" stroke-width="1.5"/><text x="103.0" y="26" text-anchor="middle" dominant-baseline="central" class="fb-dot-root">F#</text><circle cx="195.0" cy="26" r="10" fill="var(--paper)" stroke="var(--ink)" stroke-width="1.5"/><text x="195.0" y="26" text-anchor="middle" dominant-baseline="central" class="fb-dot-note">G#</text><circle cx="241.0" cy="26" r="10" fill="var(--paper)" stroke="var(--ink)" stroke-width="1.5"/><text x="241.0" y="26" text-anchor="middle" dominant-baseline="central" class="fb-dot-note">A</text><circle cx="333.0" cy="26" r="10" fill="var(--paper)" stroke="var(--ink)" stroke-width="1.5"/><text x="333.0" y="26" text-anchor="middle" dominant-baseline="central" class="fb-dot-note">B</text><circle cx="425.0" cy="26" r="10" fill="var(--paper)" stroke="var(--ink)" stroke-width="1.5"/><text x="425.0" y="26" text-anchor="middle" dominant-baseline="central" class="fb-dot-note">C#</text><circle cx="517.0" cy="26" r="10" fill="var(--paper)" stroke="var(--ink)" stroke-width="1.5"/><text x="517.0" y="26" text-anchor="middle" dominant-baseline="central" class="fb-dot-note">D#</text><circle cx="563.0" cy="26" r="10" fill="var(--paper)" stroke="var(--ink)" stroke-width="1.5"/><text x="563.0" y="26" text-anchor="middle" dominant-baseline="central" class="fb-dot-note">E</text><text x="20" y="52" text-anchor="middle" dominant-baseline="central" class="fb-mark">B</text><circle cx="34" cy="52" r="10" fill="var(--paper)" stroke="var(--ink)" stroke-width="1.5"/><text x="34" y="52" text-anchor="middle" dominant-baseline="central" class="fb-dot-note">B</text><circle cx="103.0" cy="52" r="10" fill="var(--paper)" stroke="var(--ink)" stroke-width="1.5"/><text x="103.0" y="52" text-anchor="middle" dominant-baseline="central" class="fb-dot-note">C#</text><circle cx="195.0" cy="52" r="10" fill="var(--paper)" stroke="var(--ink)" stroke-width="1.5"/><text x="195.0" y="52" text-anchor="middle" dominant-baseline="central" class="fb-dot-note">D#</text><circle cx="241.0" cy="52" r="10" fill="var(--paper)" stroke="var(--ink)" stroke-width="1.5"/><text x="241.0" y="52" text-anchor="middle" dominant-baseline="central" class="fb-dot-note">E</text><circle cx="333.0" cy="52" r="10" fill="var(--accent)" stroke="var(--accent)" stroke-width="1.5"/><text x="333.0" y="52" text-anchor="middle" dominant-baseline="central" class="fb-dot-root">F#</text><circle cx="425.0" cy="52" r="10" fill="var(--paper)" stroke="var(--ink)" stroke-width="1.5"/><text x="425.0" y="52" text-anchor="middle" dominant-baseline="central" class="fb-dot-note">G#</text><circle cx="471.0" cy="52" r="10" fill="var(--paper)" stroke="var(--ink)" stroke-width="1.5"/><text x="471.0" y="52" text-anchor="middle" dominant-baseline="central" class="fb-dot-note">A</text><circle cx="563.0" cy="52" r="10" fill="var(--paper)" stroke="var(--ink)" stroke-width="1.5"/><text x="563.0" y="52" text-anchor="middle" dominant-baseline="central" class="fb-dot-note">B</text><text x="20" y="78" text-anchor="middle" dominant-baseline="central" class="fb-mark">G</text><circle cx="57.0" cy="78" r="10" fill="var(--paper)" stroke="var(--ink)" stroke-width="1.5"/><text x="57.0" y="78" text-anchor="middle" dominant-baseline="central" class="fb-dot-note">G#</text><circle cx="103.0" cy="78" r="10" fill="var(--paper)" stroke="var(--ink)" stroke-width="1.5"/><text x="103.0" y="78" text-anchor="middle" dominant-baseline="central" class="fb-dot-note">A</text><circle cx="195.0" cy="78" r="10" fill="var(--paper)" stroke="var(--ink)" stroke-width="1.5"/><text x="195.0" y="78" text-anchor="middle" dominant-baseline="central" class="fb-dot-note">B</text><circle cx="287.0" cy="78" r="10" fill="var(--paper)" stroke="var(--ink)" stroke-width="1.5"/><text x="287.0" y="78" text-anchor="middle" dominant-baseline="central" class="fb-dot-note">C#</text><circle cx="379.0" cy="78" r="10" fill="var(--paper)" stroke="var(--ink)" stroke-width="1.5"/><text x="379.0" y="78" text-anchor="middle" dominant-baseline="central" class="fb-dot-note">D#</text><circle cx="425.0" cy="78" r="10" fill="var(--paper)" stroke="var(--ink)" stroke-width="1.5"/><text x="425.0" y="78" text-anchor="middle" dominant-baseline="central" class="fb-dot-note">E</text><circle cx="517.0" cy="78" r="10" fill="var(--accent)" stroke="var(--accent)" stroke-width="1.5"/><text x="517.0" y="78" text-anchor="middle" dominant-baseline="central" class="fb-dot-root">F#</text><text x="20" y="104" text-anchor="middle" dominant-baseline="central" class="fb-mark">D</text><circle cx="57.0" cy="104" r="10" fill="var(--paper)" stroke="var(--ink)" stroke-width="1.5"/><text x="57.0" y="104" text-anchor="middle" dominant-baseline="central" class="fb-dot-note">D#</text><circle cx="103.0" cy="104" r="10" fill="var(--paper)" stroke="var(--ink)" stroke-width="1.5"/><text x="103.0" y="104" text-anchor="middle" dominant-baseline="central" class="fb-dot-note">E</text><circle cx="195.0" cy="104" r="10" fill="var(--accent)" stroke="var(--accent)" stroke-width="1.5"/><text x="195.0" y="104" text-anchor="middle" dominant-baseline="central" class="fb-dot-root">F#</text><circle cx="287.0" cy="104" r="10" fill="var(--paper)" stroke="var(--ink)" stroke-width="1.5"/><text x="287.0" y="104" text-anchor="middle" dominant-baseline="central" class="fb-dot-note">G#</text><circle cx="333.0" cy="104" r="10" fill="var(--paper)" stroke="var(--ink)" stroke-width="1.5"/><text x="333.0" y="104" text-anchor="middle" dominant-baseline="central" class="fb-dot-note">A</text><circle cx="425.0" cy="104" r="10" fill="var(--paper)" stroke="var(--ink)" stroke-width="1.5"/><text x="425.0" y="104" text-anchor="middle" dominant-baseline="central" class="fb-dot-note">B</text><circle cx="517.0" cy="104" r="10" fill="var(--paper)" stroke="var(--ink)" stroke-width="1.5"/><text x="517.0" y="104" text-anchor="middle" dominant-baseline="central" class="fb-dot-note">C#</text><text x="20" y="130" text-anchor="middle" dominant-baseline="central" class="fb-mark">A</text><circle cx="34" cy="130" r="10" fill="var(--paper)" stroke="var(--ink)" stroke-width="1.5"/><text x="34" y="130" text-anchor="middle" dominant-baseline="central" class="fb-dot-note">A</text><circle cx="103.0" cy="130" r="10" fill="var(--paper)" stroke="var(--ink)" stroke-width="1.5"/><text x="103.0" y="130" text-anchor="middle" dominant-baseline="central" class="fb-dot-note">B</text><circle cx="195.0" cy="130" r="10" fill="var(--paper)" stroke="var(--ink)" stroke-width="1.5"/><text x="195.0" y="130" text-anchor="middle" dominant-baseline="central" class="fb-dot-note">C#</text><circle cx="287.0" cy="130" r="10" fill="var(--paper)" stroke="var(--ink)" stroke-width="1.5"/><text x="287.0" y="130" text-anchor="middle" dominant-baseline="central" class="fb-dot-note">D#</text><circle cx="333.0" cy="130" r="10" fill="var(--paper)" stroke="var(--ink)" stroke-width="1.5"/><text x="333.0" y="130" text-anchor="middle" dominant-baseline="central" class="fb-dot-note">E</text><circle cx="425.0" cy="130" r="10" fill="var(--accent)" stroke="var(--accent)" stroke-width="1.5"/><text x="425.0" y="130" text-anchor="middle" dominant-baseline="central" class="fb-dot-root">F#</text><circle cx="517.0" cy="130" r="10" fill="var(--paper)" stroke="var(--ink)" stroke-width="1.5"/><text x="517.0" y="130" text-anchor="middle" dominant-baseline="central" class="fb-dot-note">G#</text><circle cx="563.0" cy="130" r="10" fill="var(--paper)" stroke="var(--ink)" stroke-width="1.5"/><text x="563.0" y="130" text-anchor="middle" dominant-baseline="central" class="fb-dot-note">A</text><text x="20" y="156" text-anchor="middle" dominant-baseline="central" class="fb-mark">E</text><circle cx="34" cy="156" r="10" fill="var(--paper)" stroke="var(--ink)" stroke-width="1.5"/><text x="34" y="156" text-anchor="middle" dominant-baseline="central" class="fb-dot-note">E</text><circle cx="103.0" cy="156" r="10" fill="var(--accent)" stroke="var(--accent)" stroke-width="1.5"/><text x="103.0" y="156" text-anchor="middle" dominant-baseline="central" class="fb-dot-root">F#</text><circle cx="195.0" cy="156" r="10" fill="var(--paper)" stroke="var(--ink)" stroke-width="1.5"/><text x="195.0" y="156" text-anchor="middle" dominant-baseline="central" class="fb-dot-note">G#</text><circle cx="241.0" cy="156" r="10" fill="var(--paper)" stroke="var(--ink)" stroke-width="1.5"/><text x="241.0" y="156" text-anchor="middle" dominant-baseline="central" class="fb-dot-note">A</text><circle cx="333.0" cy="156" r="10" fill="var(--paper)" stroke="var(--ink)" stroke-width="1.5"/><text x="333.0" y="156" text-anchor="middle" dominant-baseline="central" class="fb-dot-note">B</text><circle cx="425.0" cy="156" r="10" fill="var(--paper)" stroke="var(--ink)" stroke-width="1.5"/><text x="425.0" y="156" text-anchor="middle" dominant-baseline="central" class="fb-dot-note">C#</text><circle cx="517.0" cy="156" r="10" fill="var(--paper)" stroke="var(--ink)" stroke-width="1.5"/><text x="517.0" y="156" text-anchor="middle" dominant-baseline="central" class="fb-dot-note">D#</text><circle cx="563.0" cy="156" r="10" fill="var(--paper)" stroke="var(--ink)" stroke-width="1.5"/><text x="563.0" y="156" text-anchor="middle" dominant-baseline="central" class="fb-dot-note">E</text></svg><p class="wc-drill"><span class="wc-drill-label">Drill</span> Play it in thirds — root, third, second, fourth, and so on up the neck.</p></div>
+      
     </section>
     
     </main>
