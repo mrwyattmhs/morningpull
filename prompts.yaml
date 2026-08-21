@@ -16,8 +16,8 @@ max_searches_per_prompt: 3
 wildcards:
   - shikaku
   - music
-  - numbers
-wildcards_per_day: 1
+  #- numbers
+wildcards_per_day: 2
 
 # ---------------------------------------------------------------------------
 # The topic pool. Each day picks `news_per_day` of these, walking through the
