@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Morning Pull</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Spectral:ital,wght@0,400;0,600;1,400&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+<style>
+  :root { --maxw: 720px; --rail: 92px; }
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    margin: 0;
+    padding-left: var(--rail);
+    font-family: "Inter", system-ui, sans-serif;
+    line-height: 1.6;
+    transition: background .28s ease, color .28s ease;
+  }
+
+  /* ---------- Theme palettes ---------- */
+  body[data-theme="editorial"] {
+    --paper:#f3f4f1; --ink:#1a2230; --muted:#5c6672; --accent:#b23a2e; --hair:#d8dad4;
+    background: var(--paper); color: var(--ink);
+  }
+  body[data-theme="green"] {
+    --paper:#14572f; --ink:#ffffff; --muted:#c7e3d3; --accent:#ffd166; --hair:rgba(255,255,255,.30);
+    background: var(--paper); color: var(--ink);
+  }
+  body[data-theme="dark"] {
+    --paper:#0e1116; --ink:#e8e6e1; --muted:#8b95a3; --accent:#e0a458; --hair:#232a33;
+    background: var(--paper); color: var(--ink);
+  }
+
+  /* ---------- Left theme rail ---------- */
+  .theme-rail {
+    position: fixed; top: 0; left: 0; z-index: 20;
+    width: var(--rail); height: 100vh;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center; gap: 12px;
+    border-right: 1px solid var(--hair);
+  }
+  .theme-rail .rail-label {
+    position: absolute; top: 22px;
+    font-family: "JetBrains Mono", monospace; font-size: 10px;
+    letter-spacing: .16em; text-transform: uppercase; color: var(--muted);
+  }
+  .theme-rail button {
+    appearance: none; cursor: pointer;
+    width: 64px; height: 64px; border-radius: 14px;
+    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 7px;
+    border: 1px solid var(--hair); background: transparent; color: var(--muted);
+    font-family: "JetBrains Mono", monospace; font-size: 9px;
+    letter-spacing: .1em; text-transform: uppercase;
+    transition: transform .15s ease, border-color .15s ease, color .15s ease;
+  }
+  .theme-rail button:hover { transform: translateY(-1px); }
+  .theme-rail button[aria-pressed="true"] { border-color: var(--accent); color: var(--ink); }
+  .theme-rail .swatch {
+    width: 22px; height: 22px; border-radius: 6px;
+    box-shadow: inset 0 0 0 1px rgba(0,0,0,.18);
+  }
+  .sw-editorial { background: #f3f4f1; }
+  .sw-green     { background: #14572f; }
+  .sw-dark      { background: #0e1116; }
+
+  /* ---------- Shared shell ---------- */
+  .wrap { max-width: var(--maxw); margin: 0 auto; padding: 0 24px 96px; }
+
+  header.mast { padding: 56px 0 20px; border-bottom: 2px solid var(--ink); }
+  .mast .kicker {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 12px; letter-spacing: .14em; text-transform: uppercase;
+    color: var(--accent); margin: 0 0 14px;
+  }
+  .mast h1 {
+    font-family: "Spectral", Georgia, serif;
+    font-weight: 600; font-size: clamp(38px, 8vw, 60px);
+    line-height: 1.02; letter-spacing: -.01em; margin: 0;
+  }
+  .mast .subtitle {
+    font-family: "Spectral", Georgia, serif; font-style: italic;
+    color: var(--muted); font-size: 18px; margin: 12px 0 0;
+  }
+
+  .entry { padding: 40px 0; border-bottom: 1px solid var(--hair); }
+  .entry-head { display: flex; align-items: baseline; gap: 14px; margin-bottom: 14px; }
+  .entry-num {
+    font-family: "JetBrains Mono", monospace; font-size: 13px;
+    color: var(--accent); padding-top: 4px;
+  }
+  .entry-title {
+    font-family: "Spectral", Georgia, serif; font-weight: 600;
+    font-size: 26px; letter-spacing: -.01em; margin: 0;
+  }
+  .entry-body { font-size: 17px; }
+  .entry-body p { margin: 0 0 14px; }
+  .entry-body ul { margin: 0 0 14px; padding-left: 20px; }
+  .entry-body li { margin: 0 0 8px; }
+  .entry-body a {
+    color: var(--ink); text-decoration: underline;
+    text-decoration-color: var(--accent); text-underline-offset: 2px;
+  }
+
+  .sources { margin-top: 18px; padding-top: 14px; border-top: 1px dotted var(--hair); }
+  .sources-label {
+    font-family: "JetBrains Mono", monospace; font-size: 11px;
+    letter-spacing: .12em; text-transform: uppercase; color: var(--muted);
+  }
+  .sources ul { list-style: none; margin: 8px 0 0; padding: 0; }
+  .sources li { margin: 0 0 4px; }
+  .sources a { color: var(--muted); font-size: 14px; text-decoration: none; }
+  .sources a:hover { color: var(--accent); }
+
+  footer { margin-top: 40px; font-family: "JetBrains Mono", monospace; font-size: 12px; color: var(--muted); }
+
+  /* ---------- GREEN: sans masthead, big stacked numerals, poster feel ---------- */
+  body[data-theme="green"] .mast { border-bottom-color: rgba(255,255,255,.55); }
+  body[data-theme="green"] .mast h1 { font-family: "Inter", sans-serif; font-weight: 600; letter-spacing: -.02em; }
+  body[data-theme="green"] .mast .subtitle { font-family: "Inter", sans-serif; font-style: normal; }
+  body[data-theme="green"] .entry-head { display: block; margin-bottom: 10px; }
+  body[data-theme="green"] .entry-num {
+    display: block; padding: 0 0 4px;
+    font-family: "Inter", sans-serif; font-weight: 700; font-size: 40px; line-height: 1;
+  }
+  body[data-theme="green"] .entry-title { font-family: "Inter", sans-serif; font-weight: 600; font-size: 28px; }
+  body[data-theme="green"] .entry-body a { color: var(--ink); text-decoration-color: var(--accent); }
+
+  /* ---------- DARK: technical, left accent bar on hover ---------- */
+  body[data-theme="dark"] .entry {
+    padding-left: 18px; border-left: 2px solid transparent;
+    transition: border-color .18s ease;
+  }
+  body[data-theme="dark"] .entry:hover { border-left-color: var(--accent); }
+  body[data-theme="dark"] .entry-title { font-family: "Inter", sans-serif; font-weight: 600; }
+  body[data-theme="dark"] .mast h1 { letter-spacing: -.015em; }
+
+  /* ---------- Motion + a11y floor ---------- */
+  @media (prefers-reduced-motion: no-preference) {
+    .entry { animation: rise 0.5s ease both; }
+    @keyframes rise { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+  }
+  a:focus-visible, button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+  /* ---------- Wildcards: puzzle, fretboard, numbers ---------- */
+  .pz-rule, .wc-lead { font-size: 16px; margin: 0 0 16px; }
+  .pz-svg { display: block; width: 100%; max-width: 340px; margin: 0 0 6px; height: auto; }
+  .pz-num {
+    font-family: "JetBrains Mono", monospace; font-size: 16px; fill: var(--ink);
+  }
+  .pz-reveal { margin-top: 10px; }
+  .pz-reveal summary {
+    cursor: pointer; display: inline-block; padding: 5px 12px;
+    border: 1px solid var(--hair); border-radius: 999px;
+    font-family: "JetBrains Mono", monospace; font-size: 11px;
+    letter-spacing: .1em; text-transform: uppercase; color: var(--muted);
+  }
+  .pz-reveal summary:hover { border-color: var(--accent); color: var(--ink); }
+  .pz-reveal[open] summary { margin-bottom: 12px; }
+  .pz-reveal .pz-svg { margin-top: 4px; }
+
+  .fb-svg { display: block; width: 100%; margin: 4px 0 14px; height: auto; }
+  .fb-mark {
+    font-family: "JetBrains Mono", monospace; font-size: 11px; fill: var(--muted);
+  }
+  .fb-dot-note { font-family: "Inter", sans-serif; font-size: 9px; fill: var(--ink); }
+  .fb-dot-root { font-family: "Inter", sans-serif; font-size: 9px; font-weight: 600; fill: var(--paper); }
+  .wc-notes {
+    font-family: "JetBrains Mono", monospace; font-size: 14px;
+    color: var(--accent); margin: 0 0 4px;
+  }
+  .wc-drill { font-size: 15px; color: var(--muted); margin: 0; }
+  .wc-drill-label {
+    font-family: "JetBrains Mono", monospace; font-size: 11px;
+    letter-spacing: .12em; text-transform: uppercase; color: var(--accent);
+    margin-right: 8px;
+  }
+  .wc-facts { margin: 0; padding-left: 20px; font-size: 16px; }
+  .wc-facts li { margin: 0 0 7px; }
+
+  /* ---------- Archive dropdown (top right) ---------- */
+  .mast-top {
+    display: flex; align-items: flex-start; justify-content: space-between;
+    gap: 16px; margin-bottom: 14px;
+  }
+  .mast-top .kicker { margin: 0; }
+
+  .archive-nav { position: relative; flex: none; }
+  .archive-nav summary {
+    list-style: none; cursor: pointer; user-select: none;
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 6px 12px; border: 1px solid var(--hair); border-radius: 999px;
+    font-family: "JetBrains Mono", monospace; font-size: 11px;
+    letter-spacing: .12em; text-transform: uppercase; color: var(--muted);
+    transition: border-color .15s ease, color .15s ease;
+  }
+  .archive-nav summary::-webkit-details-marker { display: none; }
+  .archive-nav summary:hover { border-color: var(--accent); color: var(--ink); }
+  .archive-nav[open] summary { border-color: var(--accent); color: var(--ink); }
+  .archive-nav .chev { font-size: 9px; transition: transform .18s ease; }
+  .archive-nav[open] .chev { transform: rotate(180deg); }
+
+  .archive-menu {
+    position: absolute; top: calc(100% + 8px); right: 0; z-index: 30;
+    min-width: 248px; padding: 10px;
+    background: var(--paper); border: 1px solid var(--hair); border-radius: 12px;
+    box-shadow: 0 14px 34px rgba(0,0,0,.16);
+    display: flex; flex-direction: column;
+  }
+  .arch-label {
+    font-family: "JetBrains Mono", monospace; font-size: 10px;
+    letter-spacing: .14em; text-transform: uppercase; color: var(--muted);
+    padding: 4px 8px 8px;
+  }
+  .arch-item {
+    display: flex; align-items: baseline; justify-content: space-between; gap: 14px;
+    padding: 7px 8px; border-radius: 7px; text-decoration: none; color: var(--ink);
+  }
+  .arch-item:hover { background: var(--hair); }
+  .arch-item .arch-when { font-size: 14px; }
+  .arch-item .arch-date {
+    font-family: "JetBrains Mono", monospace; font-size: 11px; color: var(--muted);
+  }
+  .arch-item.is-current .arch-when { color: var(--accent); font-weight: 600; }
+  .arch-empty {
+    padding: 8px; font-size: 13px; color: var(--muted); line-height: 1.45;
+  }
+  .arch-all {
+    margin-top: 8px; padding: 9px 8px 4px; border-top: 1px solid var(--hair);
+    font-family: "JetBrains Mono", monospace; font-size: 11px;
+    letter-spacing: .06em; color: var(--accent); text-decoration: none;
+  }
+  .arch-all:hover { text-decoration: underline; }
+
+  /* Archive index page */
+  .arch-list { list-style: none; margin: 0; padding: 0; }
+  .arch-list li { border-bottom: 1px dotted var(--hair); }
+  .arch-list li:last-child { border-bottom: none; }
+  .arch-list a {
+    display: flex; align-items: baseline; justify-content: space-between; gap: 16px;
+    padding: 11px 2px; text-decoration: none; color: var(--ink);
+  }
+  .arch-list a:hover .row-date { color: var(--accent); }
+  .arch-list .row-date { font-family: "Spectral", Georgia, serif; font-size: 17px; }
+  .arch-list .row-iso {
+    font-family: "JetBrains Mono", monospace; font-size: 12px; color: var(--muted);
+  }
+  .back-link { color: var(--muted); text-decoration: none; font-size: 15px; }
+  .back-link:hover { color: var(--accent); }
+
+  /* ---------- Responsive: rail becomes a top bar on phones ---------- */
+  @media (max-width: 720px) {
+    body { padding-left: 0; }
+    .theme-rail {
+      position: sticky; top: 0; left: 0; width: 100%; height: auto;
+      flex-direction: row; justify-content: center; gap: 8px;
+      padding: 10px; border-right: none; border-bottom: 1px solid var(--hair);
+      background: var(--paper);
+    }
+    .theme-rail .rail-label { display: none; }
+    .theme-rail button { width: auto; height: 42px; flex-direction: row; gap: 8px; padding: 0 14px; }
+    .theme-rail .swatch { width: 16px; height: 16px; }
+    .mast-top { position: relative; }
+    .archive-nav { position: static; }
+    .archive-menu {
+      right: auto; left: 0; width: 100%; min-width: 0;
+      max-height: 60vh; overflow-y: auto;
+    }
+  }
+</style>
+</head>
+<body data-theme="editorial">
+
+  <nav class="theme-rail" aria-label="Page theme">
+    <span class="rail-label">Theme</span>
+    <button type="button" data-theme="editorial" aria-pressed="true"><span class="swatch sw-editorial"></span>Paper</button>
+    <button type="button" data-theme="green" aria-pressed="false"><span class="swatch sw-green"></span>Green</button>
+    <button type="button" data-theme="dark" aria-pressed="false"><span class="swatch sw-dark"></span>Dark</button>
+  </nav>
+
+  <div class="wrap">
+    <header class="mast">
+      <div class="mast-top">
+        <p class="kicker">THURSDAY, AUGUST 27, 2026</p>
+        
+    <details class="archive-nav">
+      <summary aria-label="Browse previous pulls"><span>Archive</span><span class="chev" aria-hidden="true">&#9662;</span></summary>
+      <div class="archive-menu">
+        <span class="arch-label">Past week</span>
+        <a class="arch-item is-current" href="../index.html"><span class="arch-when">Today</span><span class="arch-date">Thu Aug 27</span></a>
+<a class="arch-item" href="../archive/2026-08-26.html"><span class="arch-when">Wed Aug 26</span><span class="arch-date">2026-08-26</span></a>
+<a class="arch-item" href="../archive/2026-08-25.html"><span class="arch-when">Tue Aug 25</span><span class="arch-date">2026-08-25</span></a>
+<a class="arch-item" href="../archive/2026-08-24.html"><span class="arch-when">Mon Aug 24</span><span class="arch-date">2026-08-24</span></a>
+<a class="arch-item" href="../archive/2026-08-23.html"><span class="arch-when">Sun Aug 23</span><span class="arch-date">2026-08-23</span></a>
+<a class="arch-item" href="../archive/2026-08-22.html"><span class="arch-when">Sat Aug 22</span><span class="arch-date">2026-08-22</span></a>
+<a class="arch-item" href="../archive/2026-08-21.html"><span class="arch-when">Fri Aug 21</span><span class="arch-date">2026-08-21</span></a>
+<a class="arch-item" href="../archive/2026-08-20.html"><span class="arch-when">Thu Aug 20</span><span class="arch-date">2026-08-20</span></a>
+        <a class="arch-all" href="../archive.html">Previous month &amp; older &rarr;</a>
+      </div>
+    </details>
+    
+      </div>
+      <h1>The Morning Pull</h1>
+      <p class="subtitle">A daily dispatch, assembled overnight.</p>
+    </header>
+    <main>
+      
+    <section class="entry">
+      <div class="entry-head">
+        <span class="entry-num">01</span>
+        <h2 class="entry-title">Enthusiast car market</h2>
+      </div>
+      <div class="entry-body"><h2>COLLECTOR CAR MARKET NEWS</h2>
+<p><strong>MONTEREY 2026: RECORD SPENDING AT THE TOP</strong></p>
+<p>The various collector car auctions held during Monterey Car Week set a new record with around $748 million spent — an increase of over $315 million from a year ago and over $277 million more than the previous high set in 2022.</p>
+<p>Headline results:
+- A 2026 Ferrari Luce 'Tailor Made' sold for $40 million, setting records for the most expensive electric car and most expensive automotive charity lot ever.
+- A 1964 Shelby Cobra Daytona Coupe took $42,905,000, a record for an American car at auction.
+- A 1996 McLaren F1 GTR sold for almost $35 million — a new marque and British-built car record.
+- The most expensive car sold at the Mecum Monterey 2026 auction was a 1996 Ferrari F50 for a model record of $14,575,000.</p>
+<p>69 lots exceeded $1 million, 14 surpassed $5 million, six crossed $10 million and two exceeded $30 million.</p>
+<hr />
+<p><strong>TWO-TIER MARKET: STRENGTH AT TOP, WEAKNESS BELOW</strong></p>
+<p>Auctions show plenty of enthusiasm on high-end cars that skew to a young demographic, however a large volume of cars sold in those same sales have produced ho-hum results, with an overall slight downward trend. Mass-market collectibles are generally falling in value as the cost of ownership increases.</p>
+<p>Cars from the 1980s through the 2020s carried median premiums of 31 to 38% over Hagerty Price Guide condition-appropriate values, while cars from the 1960s were a median 6.2% under once the Cobra Daytona Coupe is excluded.</p>
+<hr />
+<p><strong>MODERN PERFORMANCE CARS DRIVING COLLECTIBILITY</strong></p>
+<p>Modern classics and 1980s–1990s vehicles keep drawing younger buyers chasing the cars of their youth, and that generational handoff is reshaping which models command attention.</p>
+<p>Key performers emerging as collectibles:</p>
+<ul>
+<li>As modern performance cars move towards turbocharging and electrification, the S2000's purity has made it increasingly collectible, with unmodified, low-mileage examples already rising in value.</li>
+<li>The Porsche Carrera GT is the obvious example, with a recent Amelia auction result seeing one sell for around $6.7 million.</li>
+<li>Values for the Lamborghini Aventador SVJ have begun to strengthen as the wider market recognises that this particular era of Lamborghini V12 road car is unlikely to return.</li>
+<li>The Toyota GR Corolla, Hyundai Veloster N, and Subaru WRX hatchback are among the most promising candidates for affordable future collectibles.</li>
+</ul>
+<p>Modern enthusiast cars from the 1990s and 2000s—especially cars with analog appeal, manual transmissions, and limited electronic interference—are still rising.</p></div>
+      <div class="sources"><span class="sources-label">Sources</span><ul><li><a href="https://www.classic-car-auctions.info/usa/california/monterey/2026-monterey-car-week-auctions-overview-top-30-sales/">2026 Monterey Car Week Auctions Overview &amp; Top 30 Sales - Classic Car Auctions</a></li>
+<li><a href="https://www.classic-car-auctions.info/usa/california/monterey/2026-rm-sothebys-monterey-sale-auction-results/">2026 RM Sotheby&#x27;s Monterey Sale (Auction Results) - Classic Car Auctions</a></li>
+<li><a href="https://theweeklydriver.com/2026/08/monterey-car-week-2026-auction-results/">Monterey Car Week 2026 Auction Results: $755.6 Million</a></li>
+<li><a href="https://www.classic-car-auctions.info/usa/california/monterey-rm/2026-mecum-monterey-sale-auction-results/">2026 Mecum Monterey Sale (Auction Results) - Classic Car Auctions</a></li>
+<li><a href="https://news.dupontregistry.com/blogs/auctions/rm-sothebys-the-monterey-auction-2026-top-10-results-highlights">RM Sotheby&#x27;s | The Monterey Auction 2026: Top 10 Results &amp; Highlights – duPont REGISTRY News</a></li>
+<li><a href="https://www.hagerty.com/media/market-trends/hagerty-insider/the-2026-collector-car-market-has-a-strong-top-end-but-a-soft-underbelly/">The 2026 Collector Car Market Has a Strong Top End, But a Soft Underbelly - Hagerty Media</a></li>
+<li><a href="https://www.hagerty.com/media/market-trends/hagerty-insider/data-driven/heres-what-our-experts-predict-for-the-2026-collector-car-market/">Here’s What Our Experts Predict for the 2026 Collector Car Market - Hagerty Media</a></li>
+<li><a href="https://www.motorious.com/articles/auction/where-the-collector-car-market-is-actually-heading-in-2026-reading-the-auction-tea-leaves/">Where the Collector Car Market Is Actually Heading in 2026: Reading the Auction Tea Leaves</a></li>
+<li><a href="https://www.goodwood.com/grr/road/news/best-investment-cars-for-2026/">Best investment cars for 2026 | GRR</a></li>
+<li><a href="https://www.exoticcarlist.com/blog/the-investment-value-of-modern-classics/">The Investment Value of Modern Classics - Exotic Car List</a></li>
+<li><a href="https://www.romansinternational.com/blog/top-10-supercars-appreciating-in-value">Supercars Appreciating in Value 2026 | Romans International</a></li>
+<li><a href="https://www.cargurus.com/research/articles/future-classic-cars">The Best Future Classic Cars to Buy in 2026 - CarGurus</a></li>
+<li><a href="https://automotivehistory.org/classic-car-prices-2026-market-trends/">Are Classic Car Prices Dropping in 2026? A Historical Look at Market Booms and Corrections - This Day In Automotive History</a></li></ul></div>
+    </section>
+    
+
+    <section class="entry">
+      <div class="entry-head">
+        <span class="entry-num">02</span>
+        <h2 class="entry-title">Blackwing &amp; V-Series</h2>
+      </div>
+      <div class="entry-body"><p>I'll search for recent news about the Cadillac V-Series vehicles.## <strong>Production &amp; End of Line</strong></p>
+<p>Production of the 2026 Cadillac CT4 runs through June 2026, while production of the 2026 Cadillac CT5 continues until the end of the 2026 calendar year. The 2026 model year is the last opportunity to acquire a new, current-generation CT5-V Blackwing from the factory. For its final model year, Cadillac is offering a "Curated by Cadillac" customization program with MSRP starting at approximately $158,000.</p>
+<hr />
+<h2><strong>Future CT5 &amp; Next-Gen Blackwing</strong></h2>
+<p>Cadillac has confirmed the CT5 lineage will continue with an ICE-powered next-generation model. Insider sources indicate GM will indeed build a second-generation Cadillac CT5-V Blackwing high-performance sedan. The next-gen CT5 is set to ride on the updated Alpha 2-2 platform, and the upcoming Chevy Camaro will share the same A2-2 platform with the CT5-V Blackwing and will have a high-performance model. Rumors suggest the next-generation model may offer increased power—the new car is set to feature on an updated version of Cadillac's Alpha 2 platform, which will allow it to accommodate a wide array of powertrains, including V8 engines.</p>
+<p><strong>CT4 Discontinuation:</strong> The CT4 and CT4-V Blackwing are being discontinued with no replacement planned.</p>
+<hr />
+<h2><strong>Reviews</strong></h2>
+<p>The Drive has given the recently updated CT5-V Blackwing two honors, Best Performance Car and Best Car of 2026.</p>
+<hr />
+<h2><strong>Racing &amp; Motorsport</strong></h2>
+<p><strong>V-Series.R Hypercar Updates:</strong> The Cadillac V-Series.R is receiving aero upgrades for 2026, which will give it stickier grip on track while helping it cut through the air. The V-Series.R retains signature design elements but loses its front dive planes and winglets; the rear profile was reshaped resulting in a lower spoiler and removal of the flying buttresses, creating lower drag.</p>
+<p><strong>V-One Concept (Speculative):</strong> Cadillac revealed a V-One concept that shares its foundation with the V-Series.R race car and has an 830-horsepower hybrid V8 engine. Cadillac currently has no plans to build the V-ONE, though the statement leaves the door open.</p>
+<hr />
+<h2><strong>Electrification &amp; Broader V-Series News</strong></h2>
+<p>In 2025, Cadillac V-Series enjoyed its best sales year ever and the introduction of its first electrified models, the OPTIQ-V and LYRIQ-V. Production of the 2026 Cadillac Lyriq-V began March 24, 2025, with pricing starting at $79,990 for the base V-Series.</p></div>
+      <div class="sources"><span class="sources-label">Sources</span><ul><li><a href="https://gmauthority.com/blog/2025/10/heres-when-2026-cadillac-ct5-v-blackwing-production-will-end/">Here&#x27;s When 2026 Cadillac CT5-V Blackwing Production Ends</a></li>
+<li><a href="https://gmauthority.com/blog/2026/07/second-generation-cadillac-ct5-v-blackwing-incoming-exclusive/">Second-Gen Cadillac CT5-V Blackwing Incoming: Exclusive</a></li>
+<li><a href="https://autos.yahoo.com/new-vehicles-and-reviews/articles/cadillac-ct5-v-blackwing-may-192357784.html">The New Cadillac CT5-V Blackwing May Have Even More Power</a></li>
+<li><a href="https://news.gm.com/home.detail.html/Pages/topic/us/en/2026/feb/0206-ct5v.html">The Cadillac CT5-V Blackwing is The Drive’s Best Car of 2026</a></li>
+<li><a href="https://gmauthority.com/blog/2025/11/cadillac-v-series-r-treated-to-aero-updates-for-2026/">Cadillac V-Series.R Treated To Aero Updates For 2026</a></li>
+<li><a href="https://www.motor1.com/news/805007/cadillac-v-one-concept-future-v-series/">Cadillac V-Series Future Teased With Wild, Race-Inspired V-One Concept</a></li>
+<li><a href="https://gmauthority.com/blog/2026/08/cadillac-v-one-concept-should-gm-build-it/">Cadillac V-ONE Concept: Should GM Build It?</a></li>
+<li><a href="https://gmauthority.com/blog/2025/04/2026-cadillac-lyriq-v-production-is-under-way/">2026 Cadillac Lyriq-V Production Is Under Way</a></li></ul></div>
+    </section>
+    
+
+    <section class="entry">
+      <div class="entry-head">
+        <span class="entry-num">03</span>
+        <h2 class="entry-title">Manual transmission performance cars</h2>
+      </div>
+      <div class="entry-body"><p>Let me search for more recent reviews and takes on manual transmission cars:## Manual Transmission News</p>
+<p><strong>Major Announcements (This Week)</strong></p>
+<p>Porsche confirmed an MT Package for the 911 Carrera S—bringing back the six-speed manual after dropping it from that trim at the end of the 2025 model year—and McLaren revealed its McL 6GT supercar will be offered with a manual, the first McLaren production car to feature one since the F1 of the early 1990s.</p>
+<p><strong>The Cutoff Looms</strong></p>
+<p>Only 24 vehicles sold in the United States still offer a manual gearbox option, down from over 35 models just five years ago. The 2026 Toyota GR Supra "Final Edition" confirms this is the last year for the manual Supra. Production of the 718 Boxster and Cayman ends in 2026.</p>
+<p><strong>Who's Holding the Line</strong></p>
+<p>A small group of automakers—Porsche, McLaren, Subaru, Toyota, Ford, and BMW—are actively committing to the stick shift in 2026 and beyond, even as Volkswagen, GM, and others quietly phase it out. Mazda continues to champion the manual car with the Miata and Mazda's lightweight sports offerings.</p>
+<p><strong>Why Manuals Persist</strong></p>
+<p>Within a tiny market sliver, people who can still get manuals are choosing them at surprisingly high rates; manuals are disappearing not because enthusiasts abandoned them, but because manufacturers decided the economics don't justify offering them across entire lineups. Hybridization fundamentally conflicts with manual transmissions—electric motors provide instant torque that automatic transmissions manage more effectively, making manuals technically impractical as hybridization spreads.</p>
+<p><strong>Notable Models Still Available</strong></p>
+<p>The 2026 GR86 comes standard with a 6-speed manual transmission. The 2026 Toyota GR Corolla features a 1.6-liter turbo three-cylinder, standard all-wheel drive, and a six-speed manual. The 2026 BMW lineup still features manual transmission options for its M2, M3 and M4 series performance sedans and the Z-series roadster.</p></div>
+      <div class="sources"><span class="sources-label">Sources</span><ul><li><a href="https://www.topspeed.com/automakers-keeping-manual-transmission-2026/">The Automakers Refusing to Kill the Manual Transmission in 2026</a></li>
+<li><a href="https://dubmagazine.com/2026/01/25/manual-transmission-cars-2026-complete-list-extinction/">Manual Transmission Cars 2026: Only 24 Models Left</a></li>
+<li><a href="https://www.olympicautoga.com/blog/manual-vs-automatic-transmission-2026/">The Manual Transmission Comeback in the U.S.: Stick Shift Future 2026</a></li>
+<li><a href="https://www.ontarioautocenter.com/news/manual-transmission-cars-still-available-in-2026-full-list-of-stick-shift-models/">Manual Transmission Cars Still Available in 2026: Full List of Stick-Shift Models - Ontario Auto Center</a></li>
+<li><a href="https://www.truecar.com/best-cars-trucks/transmission-manual/">20 Best Vehicles with Manual Transmission for 2026 - Ranked - TrueCar</a></li>
+<li><a href="https://tremec-blog.com/2026model-cars-and-trucks-still-available-with-a-manual-transmission/">2026 Model Cars and Trucks Still Available with a Manual Transmission – TREMEC Blog: Get Connected</a></li></ul></div>
+    </section>
+    
+
+    <section class="entry">
+      <div class="entry-head">
+        <span class="entry-num">04</span>
+        <h2 class="entry-title">Shikaku</h2>
+      </div>
+      <div class="entry-body">
+<style>
+.pz-wrap { --pz-line: var(--hair); margin: 0 0 4px; }
+.pz-board { touch-action: none; user-select: none; -webkit-user-select: none;
+  display: block; width: 100%; max-width: 360px; height: auto; cursor: crosshair; }
+.pz-bar { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin: 12px 0 0; }
+.pz-btn { appearance: none; cursor: pointer; background: transparent;
+  border: 1px solid var(--hair); border-radius: 999px; padding: 6px 13px;
+  font-family: "JetBrains Mono", monospace; font-size: 11px; letter-spacing: .1em;
+  text-transform: uppercase; color: var(--muted); }
+.pz-btn:hover { border-color: var(--accent); color: var(--ink); }
+.pz-status { font-family: "JetBrains Mono", monospace; font-size: 12px; color: var(--muted); }
+.pz-status.is-done { color: var(--accent); }
+</style>
+<p class="pz-rule">Divide the grid into rectangles. Every rectangle holds exactly one number, and that number is how many squares it covers. Drag to draw a rectangle; tap one to remove it.</p><div class="pz-wrap" id="pz-20260827"><svg viewBox="0 0 306 306" class="pz-board" role="img" aria-label="Shikaku grid, 7 by 7"><g class="pz-shapes"></g><rect x="6" y="6" width="294" height="294" fill="none" stroke="var(--ink)" stroke-width="2"/><line x1="48" y1="6" x2="48" y2="300" stroke="var(--hair)" stroke-width="1"/><line x1="90" y1="6" x2="90" y2="300" stroke="var(--hair)" stroke-width="1"/><line x1="132" y1="6" x2="132" y2="300" stroke="var(--hair)" stroke-width="1"/><line x1="174" y1="6" x2="174" y2="300" stroke="var(--hair)" stroke-width="1"/><line x1="216" y1="6" x2="216" y2="300" stroke="var(--hair)" stroke-width="1"/><line x1="258" y1="6" x2="258" y2="300" stroke="var(--hair)" stroke-width="1"/><line x1="6" y1="48" x2="300" y2="48" stroke="var(--hair)" stroke-width="1"/><line x1="6" y1="90" x2="300" y2="90" stroke="var(--hair)" stroke-width="1"/><line x1="6" y1="132" x2="300" y2="132" stroke="var(--hair)" stroke-width="1"/><line x1="6" y1="174" x2="300" y2="174" stroke="var(--hair)" stroke-width="1"/><line x1="6" y1="216" x2="300" y2="216" stroke="var(--hair)" stroke-width="1"/><line x1="6" y1="258" x2="300" y2="258" stroke="var(--hair)" stroke-width="1"/><text x="69.0" y="27.0" text-anchor="middle" dominant-baseline="central" class="pz-num">2</text><text x="27.0" y="195.0" text-anchor="middle" dominant-baseline="central" class="pz-num">6</text><text x="69.0" y="195.0" text-anchor="middle" dominant-baseline="central" class="pz-num">4</text><text x="69.0" y="237.0" text-anchor="middle" dominant-baseline="central" class="pz-num">2</text><text x="153.0" y="27.0" text-anchor="middle" dominant-baseline="central" class="pz-num">4</text><text x="111.0" y="153.0" text-anchor="middle" dominant-baseline="central" class="pz-num">2</text><text x="111.0" y="195.0" text-anchor="middle" dominant-baseline="central" class="pz-num">3</text><text x="153.0" y="153.0" text-anchor="middle" dominant-baseline="central" class="pz-num">2</text><text x="153.0" y="195.0" text-anchor="middle" dominant-baseline="central" class="pz-num">3</text><text x="195.0" y="111.0" text-anchor="middle" dominant-baseline="central" class="pz-num">7</text><text x="237.0" y="27.0" text-anchor="middle" dominant-baseline="central" class="pz-num">2</text><text x="237.0" y="153.0" text-anchor="middle" dominant-baseline="central" class="pz-num">4</text><text x="279.0" y="69.0" text-anchor="middle" dominant-baseline="central" class="pz-num">2</text><text x="279.0" y="153.0" text-anchor="middle" dominant-baseline="central" class="pz-num">2</text><text x="237.0" y="237.0" text-anchor="middle" dominant-baseline="central" class="pz-num">4</text></svg><div class="pz-bar"><button type="button" class="pz-btn pz-clear">Clear</button><span class="pz-status">0 of 49 squares</span></div><details class="pz-reveal"><summary>Show solution</summary><svg viewBox="0 0 306 306" class="pz-svg" role="img" aria-label="Shikaku grid, 7 by 7"><rect x="6" y="6" width="294" height="294" fill="none" stroke="var(--ink)" stroke-width="2"/><line x1="48" y1="6" x2="48" y2="300" stroke="var(--hair)" stroke-width="1"/><line x1="90" y1="6" x2="90" y2="300" stroke="var(--hair)" stroke-width="1"/><line x1="132" y1="6" x2="132" y2="300" stroke="var(--hair)" stroke-width="1"/><line x1="174" y1="6" x2="174" y2="300" stroke="var(--hair)" stroke-width="1"/><line x1="216" y1="6" x2="216" y2="300" stroke="var(--hair)" stroke-width="1"/><line x1="258" y1="6" x2="258" y2="300" stroke="var(--hair)" stroke-width="1"/><line x1="6" y1="48" x2="300" y2="48" stroke="var(--hair)" stroke-width="1"/><line x1="6" y1="90" x2="300" y2="90" stroke="var(--hair)" stroke-width="1"/><line x1="6" y1="132" x2="300" y2="132" stroke="var(--hair)" stroke-width="1"/><line x1="6" y1="174" x2="300" y2="174" stroke="var(--hair)" stroke-width="1"/><line x1="6" y1="216" x2="300" y2="216" stroke="var(--hair)" stroke-width="1"/><line x1="6" y1="258" x2="300" y2="258" stroke="var(--hair)" stroke-width="1"/><rect x="50" y="50" width="38" height="164" fill="none" stroke="var(--accent)" stroke-width="2.5" rx="3"/><rect x="92" y="176" width="38" height="122" fill="none" stroke="var(--accent)" stroke-width="2.5" rx="3"/><rect x="8" y="50" width="38" height="248" fill="none" stroke="var(--accent)" stroke-width="2.5" rx="3"/><rect x="92" y="8" width="80" height="80" fill="none" stroke="var(--accent)" stroke-width="2.5" rx="3"/><rect x="92" y="92" width="38" height="80" fill="none" stroke="var(--accent)" stroke-width="2.5" rx="3"/><rect x="134" y="92" width="38" height="80" fill="none" stroke="var(--accent)" stroke-width="2.5" rx="3"/><rect x="134" y="176" width="38" height="122" fill="none" stroke="var(--accent)" stroke-width="2.5" rx="3"/><rect x="176" y="8" width="38" height="290" fill="none" stroke="var(--accent)" stroke-width="2.5" rx="3"/><rect x="218" y="50" width="38" height="164" fill="none" stroke="var(--accent)" stroke-width="2.5" rx="3"/><rect x="260" y="134" width="38" height="80" fill="none" stroke="var(--accent)" stroke-width="2.5" rx="3"/><rect x="8" y="8" width="80" height="38" fill="none" stroke="var(--accent)" stroke-width="2.5" rx="3"/><rect x="50" y="218" width="38" height="80" fill="none" stroke="var(--accent)" stroke-width="2.5" rx="3"/><rect x="218" y="8" width="80" height="38" fill="none" stroke="var(--accent)" stroke-width="2.5" rx="3"/><rect x="260" y="50" width="38" height="80" fill="none" stroke="var(--accent)" stroke-width="2.5" rx="3"/><rect x="218" y="218" width="80" height="80" fill="none" stroke="var(--accent)" stroke-width="2.5" rx="3"/><text x="69.0" y="27.0" text-anchor="middle" dominant-baseline="central" class="pz-num">2</text><text x="27.0" y="195.0" text-anchor="middle" dominant-baseline="central" class="pz-num">6</text><text x="69.0" y="195.0" text-anchor="middle" dominant-baseline="central" class="pz-num">4</text><text x="69.0" y="237.0" text-anchor="middle" dominant-baseline="central" class="pz-num">2</text><text x="153.0" y="27.0" text-anchor="middle" dominant-baseline="central" class="pz-num">4</text><text x="111.0" y="153.0" text-anchor="middle" dominant-baseline="central" class="pz-num">2</text><text x="111.0" y="195.0" text-anchor="middle" dominant-baseline="central" class="pz-num">3</text><text x="153.0" y="153.0" text-anchor="middle" dominant-baseline="central" class="pz-num">2</text><text x="153.0" y="195.0" text-anchor="middle" dominant-baseline="central" class="pz-num">3</text><text x="195.0" y="111.0" text-anchor="middle" dominant-baseline="central" class="pz-num">7</text><text x="237.0" y="27.0" text-anchor="middle" dominant-baseline="central" class="pz-num">2</text><text x="237.0" y="153.0" text-anchor="middle" dominant-baseline="central" class="pz-num">4</text><text x="279.0" y="69.0" text-anchor="middle" dominant-baseline="central" class="pz-num">2</text><text x="279.0" y="153.0" text-anchor="middle" dominant-baseline="central" class="pz-num">2</text><text x="237.0" y="237.0" text-anchor="middle" dominant-baseline="central" class="pz-num">4</text></svg></details></div>
+<script>
+(function () {
+  var box = document.getElementById("pz-20260827");
+  if (!box) return;
+  var svg = box.querySelector(".pz-board");
+  var layer = svg.querySelector(".pz-shapes");
+  var status = box.querySelector(".pz-status");
+  var KEY = "mp-shikaku-2026-08-27";
+  var R = 7, C = 7, CELL = 42, PAD = 6;
+  var VW = 306, VH = 306;
+  var CLUES = [[0,1,2],[4,0,6],[4,1,4],[5,1,2],[0,3,4],[3,2,2],[4,2,3],[3,3,2],[4,3,3],[2,4,7],[0,5,2],[3,5,4],[1,6,2],[3,6,2],[5,5,4]];
+  var rects = [];
+  var drag = null;
+
+  function clueAt(r, c) {
+    for (var i = 0; i < CLUES.length; i++)
+      if (CLUES[i][0] === r && CLUES[i][1] === c) return CLUES[i][2];
+    return 0;
+  }
+  function cellFrom(ev) {
+    var b = svg.getBoundingClientRect();
+    var x = (ev.clientX - b.left) / b.width * VW;
+    var y = (ev.clientY - b.top) / b.height * VH;
+    var c = Math.floor((x - PAD) / CELL), r = Math.floor((y - PAD) / CELL);
+    if (r < 0 || c < 0 || r >= R || c >= C) return null;
+    return { r: r, c: c };
+  }
+  function norm(a, b) {
+    return { top: Math.min(a.r, b.r), left: Math.min(a.c, b.c),
+             h: Math.abs(a.r - b.r) + 1, w: Math.abs(a.c - b.c) + 1 };
+  }
+  function overlaps(x, list) {
+    for (var i = 0; i < list.length; i++) {
+      var y = list[i];
+      if (x.left < y.left + y.w && y.left < x.left + x.w &&
+          x.top < y.top + y.h && y.top < x.top + x.h) return true;
+    }
+    return false;
+  }
+  function check(x) {
+    var found = 0, val = 0;
+    for (var i = 0; i < CLUES.length; i++) {
+      var cr = CLUES[i][0], cc = CLUES[i][1];
+      if (cr >= x.top && cr < x.top + x.h && cc >= x.left && cc < x.left + x.w) {
+        found++; val = CLUES[i][2];
+      }
+    }
+    if (found !== 1) return false;
+    return val === x.h * x.w;
+  }
+  function el(tag, attrs) {
+    var n = document.createElementNS("http://www.w3.org/2000/svg", tag);
+    for (var k in attrs) n.setAttribute(k, attrs[k]);
+    return n;
+  }
+  function draw() {
+    while (layer.firstChild) layer.removeChild(layer.firstChild);
+    rects.forEach(function (x) {
+      layer.appendChild(el("rect", {
+        x: PAD + x.left * CELL + 2, y: PAD + x.top * CELL + 2,
+        width: x.w * CELL - 4, height: x.h * CELL - 4,
+        rx: 3, fill: "var(--accent)", "fill-opacity": "0.13",
+        stroke: "var(--accent)", "stroke-width": "2.5"
+      }));
+    });
+    if (drag) {
+      var ok = check(drag) && !overlaps(drag, rects);
+      layer.appendChild(el("rect", {
+        x: PAD + drag.left * CELL + 2, y: PAD + drag.top * CELL + 2,
+        width: drag.w * CELL - 4, height: drag.h * CELL - 4,
+        rx: 3, fill: ok ? "var(--accent)" : "var(--ink)",
+        "fill-opacity": ok ? "0.18" : "0.07",
+        stroke: ok ? "var(--accent)" : "var(--muted)",
+        "stroke-width": "2", "stroke-dasharray": ok ? "none" : "5 4"
+      }));
+    }
+    var filled = 0;
+    rects.forEach(function (x) { filled += x.h * x.w; });
+    if (filled === R * C) {
+      status.textContent = "Solved.";
+      status.className = "pz-status is-done";
+    } else {
+      status.textContent = filled + " of " + (R * C) + " squares";
+      status.className = "pz-status";
+    }
+  }
+  function save() {
+    try { localStorage.setItem(KEY, JSON.stringify(rects)); } catch (e) {}
+  }
+  function load() {
+    try {
+      var raw = localStorage.getItem(KEY);
+      if (!raw) return;
+      var got = JSON.parse(raw);
+      if (Object.prototype.toString.call(got) === "[object Array]") {
+        got.forEach(function (x) {
+          if (check(x) && !overlaps(x, rects)) rects.push(x);
+        });
+      }
+    } catch (e) {}
+  }
+
+  svg.addEventListener("pointerdown", function (ev) {
+    var cell = cellFrom(ev);
+    if (!cell) return;
+    ev.preventDefault();
+    for (var i = 0; i < rects.length; i++) {
+      var x = rects[i];
+      if (cell.r >= x.top && cell.r < x.top + x.h &&
+          cell.c >= x.left && cell.c < x.left + x.w) {
+        rects.splice(i, 1); save(); draw(); return;
+      }
+    }
+    drag = { start: cell, top: cell.r, left: cell.c, h: 1, w: 1 };
+    svg.setPointerCapture(ev.pointerId);
+    draw();
+  });
+  svg.addEventListener("pointermove", function (ev) {
+    if (!drag) return;
+    var cell = cellFrom(ev);
+    if (!cell) return;
+    ev.preventDefault();
+    var n = norm(drag.start, cell);
+    drag.top = n.top; drag.left = n.left; drag.h = n.h; drag.w = n.w;
+    draw();
+  });
+  function finish(ev) {
+    if (!drag) return;
+    var cand = { top: drag.top, left: drag.left, h: drag.h, w: drag.w };
+    drag = null;
+    if (check(cand) && !overlaps(cand, rects)) { rects.push(cand); save(); }
+    draw();
+  }
+  svg.addEventListener("pointerup", finish);
+  svg.addEventListener("pointercancel", function () { drag = null; draw(); });
+
+  box.querySelector(".pz-clear").addEventListener("click", function () {
+    rects = []; save(); draw();
+  });
+
+  load();
+  draw();
+})();
+</script>
+</div>
+      
+    </section>
+    
+
+    <section class="entry">
+      <div class="entry-head">
+        <span class="entry-num">05</span>
+        <h2 class="entry-title">Fretboard</h2>
+      </div>
+      <div class="entry-body"><p class="wc-lead"><strong>A# Aeolian (minor)</strong> — The natural minor scale.</p><p class="wc-notes">A# · C · C# · D# · F · F# · G#</p><svg viewBox="0 0 612 190" class="fb-svg" role="img" aria-label="Fretboard diagram"><line x1="34" y1="26" x2="34" y2="156" stroke="var(--ink)" stroke-width="3" opacity="0.55"/><line x1="80" y1="26" x2="80" y2="156" stroke="var(--ink)" stroke-width="1" opacity="0.55"/><line x1="126" y1="26" x2="126" y2="156" stroke="var(--ink)" stroke-width="1" opacity="0.55"/><line x1="172" y1="26" x2="172" y2="156" stroke="var(--ink)" stroke-width="1" opacity="0.55"/><line x1="218" y1="26" x2="218" y2="156" stroke="var(--ink)" stroke-width="1" opacity="0.55"/><line x1="264" y1="26" x2="264" y2="156" stroke="var(--ink)" stroke-width="1" opacity="0.55"/><line x1="310" y1="26" x2="310" y2="156" stroke="var(--ink)" stroke-width="1" opacity="0.55"/><line x1="356" y1="26" x2="356" y2="156" stroke="var(--ink)" stroke-width="1" opacity="0.55"/><line x1="402" y1="26" x2="402" y2="156" stroke="var(--ink)" stroke-width="1" opacity="0.55"/><line x1="448" y1="26" x2="448" y2="156" stroke="var(--ink)" stroke-width="1" opacity="0.55"/><line x1="494" y1="26" x2="494" y2="156" stroke="var(--ink)" stroke-width="1" opacity="0.55"/><line x1="540" y1="26" x2="540" y2="156" stroke="var(--ink)" stroke-width="1" opacity="0.55"/><line x1="586" y1="26" x2="586" y2="156" stroke="var(--ink)" stroke-width="1" opacity="0.55"/><line x1="34" y1="26" x2="586" y2="26" stroke="var(--muted)" stroke-width="1"/><line x1="34" y1="52" x2="586" y2="52" stroke="var(--muted)" stroke-width="1"/><line x1="34" y1="78" x2="586" y2="78" stroke="var(--muted)" stroke-width="1"/><line x1="34" y1="104" x2="586" y2="104" stroke="var(--muted)" stroke-width="1"/><line x1="34" y1="130" x2="586" y2="130" stroke="var(--muted)" stroke-width="1"/><line x1="34" y1="156" x2="586" y2="156" stroke="var(--muted)" stroke-width="1"/><text x="149.0" y="178" text-anchor="middle" class="fb-mark">3</text><text x="241.0" y="178" text-anchor="middle" class="fb-mark">5</text><text x="333.0" y="178" text-anchor="middle" class="fb-mark">7</text><text x="425.0" y="178" text-anchor="middle" class="fb-mark">9</text><text x="563.0" y="178" text-anchor="middle" class="fb-mark">12</text><text x="20" y="26" text-anchor="middle" dominant-baseline="central" class="fb-mark">E</text><circle cx="57.0" cy="26" r="10" fill="var(--paper)" stroke="var(--ink)" stroke-width="1.5"/><text x="57.0" y="26" text-anchor="middle" dominant-baseline="central" class="fb-dot-note">F</text><circle cx="103.0" cy="26" r="10" fill="var(--paper)" stroke="var(--ink)" stroke-width="1.5"/><text x="103.0" y="26" text-anchor="middle" dominant-baseline="central" class="fb-dot-note">F#</text><circle cx="195.0" cy="26" r="10" fill="var(--paper)" stroke="var(--ink)" stroke-width="1.5"/><text x="195.0" y="26" text-anchor="middle" dominant-baseline="central" class="fb-dot-note">G#</text><circle cx="287.0" cy="26" r="10" fill="var(--accent)" stroke="var(--accent)" stroke-width="1.5"/><text x="287.0" y="26" text-anchor="middle" dominant-baseline="central" class="fb-dot-root">A#</text><circle cx="379.0" cy="26" r="10" fill="var(--paper)" stroke="var(--ink)" stroke-width="1.5"/><text x="379.0" y="26" text-anchor="middle" dominant-baseline="central" class="fb-dot-note">C</text><circle cx="425.0" cy="26" r="10" fill="var(--paper)" stroke="var(--ink)" stroke-width="1.5"/><text x="425.0" y="26" text-anchor="middle" dominant-baseline="central" class="fb-dot-note">C#</text><circle cx="517.0" cy="26" r="10" fill="var(--paper)" stroke="var(--ink)" stroke-width="1.5"/><text x="517.0" y="26" text-anchor="middle" dominant-baseline="central" class="fb-dot-note">D#</text><text x="20" y="52" text-anchor="middle" dominant-baseline="central" class="fb-mark">B</text><circle cx="57.0" cy="52" r="10" fill="var(--paper)" stroke="var(--ink)" stroke-width="1.5"/><text x="57.0" y="52" text-anchor="middle" dominant-baseline="central" class="fb-dot-note">C</text><circle cx="103.0" cy="52" r="10" fill="var(--paper)" stroke="var(--ink)" stroke-width="1.5"/><text x="103.0" y="52" text-anchor="middle" dominant-baseline="central" class="fb-dot-note">C#</text><circle cx="195.0" cy="52" r="10" fill="var(--paper)" stroke="var(--ink)" stroke-width="1.5"/><text x="195.0" y="52" text-anchor="middle" dominant-baseline="central" class="fb-dot-note">D#</text><circle cx="287.0" cy="52" r="10" fill="var(--paper)" stroke="var(--ink)" stroke-width="1.5"/><text x="287.0" y="52" text-anchor="middle" dominant-baseline="central" class="fb-dot-note">F</text><circle cx="333.0" cy="52" r="10" fill="var(--paper)" stroke="var(--ink)" stroke-width="1.5"/><text x="333.0" y="52" text-anchor="middle" dominant-baseline="central" class="fb-dot-note">F#</text><circle cx="425.0" cy="52" r="10" fill="var(--paper)" stroke="var(--ink)" stroke-width="1.5"/><text x="425.0" y="52" text-anchor="middle" dominant-baseline="central" class="fb-dot-note">G#</text><circle cx="517.0" cy="52" r="10" fill="var(--accent)" stroke="var(--accent)" stroke-width="1.5"/><text x="517.0" y="52" text-anchor="middle" dominant-baseline="central" class="fb-dot-root">A#</text><text x="20" y="78" text-anchor="middle" dominant-baseline="central" class="fb-mark">G</text><circle cx="57.0" cy="78" r="10" fill="var(--paper)" stroke="var(--ink)" stroke-width="1.5"/><text x="57.0" y="78" text-anchor="middle" dominant-baseline="central" class="fb-dot-note">G#</text><circle cx="149.0" cy="78" r="10" fill="var(--accent)" stroke="var(--accent)" stroke-width="1.5"/><text x="149.0" y="78" text-anchor="middle" dominant-baseline="central" class="fb-dot-root">A#</text><circle cx="241.0" cy="78" r="10" fill="var(--paper)" stroke="var(--ink)" stroke-width="1.5"/><text x="241.0" y="78" text-anchor="middle" dominant-baseline="central" class="fb-dot-note">C</text><circle cx="287.0" cy="78" r="10" fill="var(--paper)" stroke="var(--ink)" stroke-width="1.5"/><text x="287.0" y="78" text-anchor="middle" dominant-baseline="central" class="fb-dot-note">C#</text><circle cx="379.0" cy="78" r="10" fill="var(--paper)" stroke="var(--ink)" stroke-width="1.5"/><text x="379.0" y="78" text-anchor="middle" dominant-baseline="central" class="fb-dot-note">D#</text><circle cx="471.0" cy="78" r="10" fill="var(--paper)" stroke="var(--ink)" stroke-width="1.5"/><text x="471.0" y="78" text-anchor="middle" dominant-baseline="central" class="fb-dot-note">F</text><circle cx="517.0" cy="78" r="10" fill="var(--paper)" stroke="var(--ink)" stroke-width="1.5"/><text x="517.0" y="78" text-anchor="middle" dominant-baseline="central" class="fb-dot-note">F#</text><text x="20" y="104" text-anchor="middle" dominant-baseline="central" class="fb-mark">D</text><circle cx="57.0" cy="104" r="10" fill="var(--paper)" stroke="var(--ink)" stroke-width="1.5"/><text x="57.0" y="104" text-anchor="middle" dominant-baseline="central" class="fb-dot-note">D#</text><circle cx="149.0" cy="104" r="10" fill="var(--paper)" stroke="var(--ink)" stroke-width="1.5"/><text x="149.0" y="104" text-anchor="middle" dominant-baseline="central" class="fb-dot-note">F</text><circle cx="195.0" cy="104" r="10" fill="var(--paper)" stroke="var(--ink)" stroke-width="1.5"/><text x="195.0" y="104" text-anchor="middle" dominant-baseline="central" class="fb-dot-note">F#</text><circle cx="287.0" cy="104" r="10" fill="var(--paper)" stroke="var(--ink)" stroke-width="1.5"/><text x="287.0" y="104" text-anchor="middle" dominant-baseline="central" class="fb-dot-note">G#</text><circle cx="379.0" cy="104" r="10" fill="var(--accent)" stroke="var(--accent)" stroke-width="1.5"/><text x="379.0" y="104" text-anchor="middle" dominant-baseline="central" class="fb-dot-root">A#</text><circle cx="471.0" cy="104" r="10" fill="var(--paper)" stroke="var(--ink)" stroke-width="1.5"/><text x="471.0" y="104" text-anchor="middle" dominant-baseline="central" class="fb-dot-note">C</text><circle cx="517.0" cy="104" r="10" fill="var(--paper)" stroke="var(--ink)" stroke-width="1.5"/><text x="517.0" y="104" text-anchor="middle" dominant-baseline="central" class="fb-dot-note">C#</text><text x="20" y="130" text-anchor="middle" dominant-baseline="central" class="fb-mark">A</text><circle cx="57.0" cy="130" r="10" fill="var(--accent)" stroke="var(--accent)" stroke-width="1.5"/><text x="57.0" y="130" text-anchor="middle" dominant-baseline="central" class="fb-dot-root">A#</text><circle cx="149.0" cy="130" r="10" fill="var(--paper)" stroke="var(--ink)" stroke-width="1.5"/><text x="149.0" y="130" text-anchor="middle" dominant-baseline="central" class="fb-dot-note">C</text><circle cx="195.0" cy="130" r="10" fill="var(--paper)" stroke="var(--ink)" stroke-width="1.5"/><text x="195.0" y="130" text-anchor="middle" dominant-baseline="central" class="fb-dot-note">C#</text><circle cx="287.0" cy="130" r="10" fill="var(--paper)" stroke="var(--ink)" stroke-width="1.5"/><text x="287.0" y="130" text-anchor="middle" dominant-baseline="central" class="fb-dot-note">D#</text><circle cx="379.0" cy="130" r="10" fill="var(--paper)" stroke="var(--ink)" stroke-width="1.5"/><text x="379.0" y="130" text-anchor="middle" dominant-baseline="central" class="fb-dot-note">F</text><circle cx="425.0" cy="130" r="10" fill="var(--paper)" stroke="var(--ink)" stroke-width="1.5"/><text x="425.0" y="130" text-anchor="middle" dominant-baseline="central" class="fb-dot-note">F#</text><circle cx="517.0" cy="130" r="10" fill="var(--paper)" stroke="var(--ink)" stroke-width="1.5"/><text x="517.0" y="130" text-anchor="middle" dominant-baseline="central" class="fb-dot-note">G#</text><text x="20" y="156" text-anchor="middle" dominant-baseline="central" class="fb-mark">E</text><circle cx="57.0" cy="156" r="10" fill="var(--paper)" stroke="var(--ink)" stroke-width="1.5"/><text x="57.0" y="156" text-anchor="middle" dominant-baseline="central" class="fb-dot-note">F</text><circle cx="103.0" cy="156" r="10" fill="var(--paper)" stroke="var(--ink)" stroke-width="1.5"/><text x="103.0" y="156" text-anchor="middle" dominant-baseline="central" class="fb-dot-note">F#</text><circle cx="195.0" cy="156" r="10" fill="var(--paper)" stroke="var(--ink)" stroke-width="1.5"/><text x="195.0" y="156" text-anchor="middle" dominant-baseline="central" class="fb-dot-note">G#</text><circle cx="287.0" cy="156" r="10" fill="var(--accent)" stroke="var(--accent)" stroke-width="1.5"/><text x="287.0" y="156" text-anchor="middle" dominant-baseline="central" class="fb-dot-root">A#</text><circle cx="379.0" cy="156" r="10" fill="var(--paper)" stroke="var(--ink)" stroke-width="1.5"/><text x="379.0" y="156" text-anchor="middle" dominant-baseline="central" class="fb-dot-note">C</text><circle cx="425.0" cy="156" r="10" fill="var(--paper)" stroke="var(--ink)" stroke-width="1.5"/><text x="425.0" y="156" text-anchor="middle" dominant-baseline="central" class="fb-dot-note">C#</text><circle cx="517.0" cy="156" r="10" fill="var(--paper)" stroke="var(--ink)" stroke-width="1.5"/><text x="517.0" y="156" text-anchor="middle" dominant-baseline="central" class="fb-dot-note">D#</text></svg><p class="wc-drill"><span class="wc-drill-label">Drill</span> Play it in thirds — root, third, second, fourth, and so on up the neck.</p></div>
+      
+    </section>
+    
+    </main>
+    <footer>Assembled THURSDAY, AUGUST 27, 2026 · regenerated daily</footer>
+  </div>
+<script>
+  (function () {
+    var KEY = "mp-theme";
+    var THEMES = ["editorial", "green", "dark"];
+    var body = document.body;
+    var buttons = Array.prototype.slice.call(document.querySelectorAll(".theme-rail button"));
+
+    function apply(theme) {
+      if (THEMES.indexOf(theme) === -1) theme = "editorial";
+      body.setAttribute("data-theme", theme);
+      buttons.forEach(function (b) {
+        b.setAttribute("aria-pressed", String(b.getAttribute("data-theme") === theme));
+      });
+      try { localStorage.setItem(KEY, theme); } catch (e) {}
+    }
+
+    var saved = null;
+    try { saved = localStorage.getItem(KEY); } catch (e) {}
+    apply(saved || "editorial");
+
+    buttons.forEach(function (b) {
+      b.addEventListener("click", function () { apply(b.getAttribute("data-theme")); });
+    });
+  })();
+</script>
+</body>
+</html>
