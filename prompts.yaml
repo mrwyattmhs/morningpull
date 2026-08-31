@@ -34,76 +34,90 @@ news_topics:
       Blackwing and the wider V-Series line: production news, model year
       changes, notable reviews, owner-relevant technical service news, and
       credible reporting on future V-Series products. Note clearly when
-      something is a rumor or single-source.
+      something is a rumor or single-source. Do not include "I will search
+      this up" commentary, directly post information only.
 
   - title: "Formula 1"
     prompt: >
       Find the most significant Formula 1 news from the past few days: race
       results, championship standings, driver and team announcements,
       technical developments, and regulation news. If a race weekend just
-      happened, lead with what actually decided it.
+      happened, lead with what actually decided it. Do not include "I will search
+      this up" commentary, directly post information only.
 
   - title: "Manual transmission performance cars"
     prompt: >
       Find news from the past week about manual-transmission performance
       cars, with an American focus but not exclusively: new models keeping a
       stick, manuals being discontinued, takes on the future of the manual
-      transmission, and notable reviews of three-pedal cars.
+      transmission, and notable reviews of three-pedal cars. Do not include "I will search
+      this up" commentary, directly post information only.
 
   - title: "Guitar gear & players"
     prompt: >
       Find news from the past week in the guitar world: notable new guitars,
       amps, and pedals, significant player news and interviews, and anything
       interesting in guitar technique or instrument technology. Skip
-      roundups and listicles.
+      roundups and listicles. Do not include "I will search
+      this up" commentary, directly post information only.
 
   - title: "Cadillac racing"
     prompt: >
       Find recent news on Cadillac's factory motorsport efforts: the V-Series.R
       in IMSA and WEC, Le Mans, driver lineups, results, and technical
       developments. If there's been no racing recently, say so briefly rather
-      than reaching for older news.
+      than reaching for older news. Do not include "I will search
+      this up" commentary, directly post information only.
 
   - title: "AI research & industry"
     prompt: >
       Find the most significant AI news from the past few days: notable model
       releases, research results, industry moves, and policy developments.
-      Prioritize substance over product announcements and hype.
+      Prioritize substance over product announcements and hype. Do not include "I will search
+      this up" commentary, directly post information only.
 
   - title: "IndyCar, IMSA & endurance racing"
     prompt: >
       Find recent news from North American and endurance motorsport outside
       Formula 1: IndyCar, IMSA, and WEC. Race results, championship
       implications, driver news, and upcoming events — including anything at
-      Mid-Ohio.
+      Mid-Ohio. Do not include "I will search
+      this up" commentary, directly post information only.
 
   - title: "Mathematics"
     prompt: >
       Find recent news in mathematics: notable proofs or results, interesting
       problems, prizes and people, and mathematics education. Explain any
-      result in plain language and say why it matters.
+      result in plain language and say why it matters. Do not include "I will search
+      this up" commentary, directly post information only.
 
   - title: "Track driving & car control"
     prompt: >
       Find recent material on track driving and high-performance driver
       education: technique, tires and brakes for track use, data and coaching
       tools, notable HPDE or time-attack events, and track-day car preparation.
+      Do not include "I will search
+      this up" commentary, directly post information only.
 
   - title: "Enthusiast car market"
     prompt: >
       Find recent news on the enthusiast and collector car market: notable
       auction results, cars appreciating or falling, and modern performance
       cars trending toward collectibility. Include specific figures where
-      available.
+      available. Do not include "I will search
+      this up" commentary, directly post information only.
 
   - title: "Developer tools & automation"
     prompt: >
       Find recent news useful to someone building small automation projects:
       GitHub and GitHub Actions, Python tooling, APIs, and practical developer
-      tooling. Prioritize concrete changes over opinion pieces.
+      tooling. Prioritize concrete changes over opinion pieces. Do not include "I will search
+      this up" commentary, directly post information only.
 
   - title: "Space & science"
     prompt: >
       Find the most interesting science news from the past few days, with a
       lean toward space, physics, and engineering: missions, launches,
       discoveries, and results. Explain why each item is significant.
+      Do not include "I will search
+      this up" commentary, directly post information only.
