@@ -3,7 +3,7 @@ name: Morning dispatch
 on:
   schedule:
     # 10:01 UTC = 6:01 AM Eastern (EDT) / 5:01 AM (EST).
-    - cron: "1 10 * * *"
+    #- cron: "1 10 * * *"
   workflow_dispatch:   # lets you run it by hand from the Actions tab
 
 # contents: write lets the run commit each day's page into archive/.
